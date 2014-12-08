@@ -45,7 +45,7 @@ public class MainActivity extends BaseDrawerActivity implements GetBaFeed, Proce
   public void fillDetails() {
     if (mainAdapter.getCount() != 0) {
       BaGroups baGroups = mainAdapter.getItem(groupId);
-      CommonRequestsUtility.getBaFeed(this, this, baGroups.getBaId());
+      CommonRequestsUtility.getBaFeed(this, this, baGroups.getBaId(), 10);
     } else {
       Toast.makeText(this, "Cannot fetch bafeed as ba menu has not been fetched", Toast.LENGTH_LONG).show();
     }
@@ -53,7 +53,7 @@ public class MainActivity extends BaseDrawerActivity implements GetBaFeed, Proce
 
   @Override
   public void processBaFeed(long baId, List<BaFeed> feeds) {
-    falconRequestListAdapter = new FalconRequestListAdapter(getLayoutInflater(), feeds);
+    falconRequestListAdapter = new FalconRequestListAdapter(this, baId, getLayoutInflater(), feeds);
     ListView listView = (ListView) findViewById(R.id.main_list_content);
     listView.setAdapter(falconRequestListAdapter);
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

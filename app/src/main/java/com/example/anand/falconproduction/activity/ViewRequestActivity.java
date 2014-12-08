@@ -3,6 +3,7 @@ package com.example.anand.falconproduction.activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -80,6 +81,7 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
       linearLayout.addView(dispHeading);
       TextView otherDetails = new TextView(this);
       otherDetails.setText(Html.fromHtml(displayGroup.getFieldsHtml()));
+      otherDetails.setMovementMethod(LinkMovementMethod.getInstance());
       linearLayout.addView(otherDetails);
       mainLayout.addView(linearLayout);
     }

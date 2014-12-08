@@ -12,6 +12,7 @@ import com.example.anand.falconproduction.models.BaGroups;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
@@ -30,6 +31,7 @@ public class CommonRequestsUtility {
   private static final String tag = "commonrequest";
   private static List<BaGroups> baGroups;
   private static HashMap<Long, List<BaFeed>> baFeeds = new HashMap<Long, List<BaFeed>>();
+  private static Future<JsonObject> loading;
 
   public static void getBaMap(final Context context, final GetBaMap next) {
     if (baGroups == null) {
@@ -62,11 +64,36 @@ public class CommonRequestsUtility {
     next.processBaMap(baGroups);
   }
 
-  public static void getBaFeed(final Context context, final GetBaFeed next, final long baId) {
-    if (!baFeeds.containsKey(baId)) {
+  /**
+   * Load BaFeed this method caches feeds in memory for better loading.
+   *
+   * Todo - check limit of bafeed count
+   *
+   * @param context - activity
+   * @param next - class to process the feeds in case of pagination only the new feeds are returned.
+   * @param baId - feeds baId
+   * @param count - count of feeds needed.
+   */
+  public static void getBaFeed(final Context context, final GetBaFeed next, final long baId, int count) {
+    // cancel the request if it is already going on.
+    if (loading != null && !loading.isDone() && !loading.isCancelled())
+      return;
+    boolean loadFeed = true;
+    int skip = 0;
+    if (baFeeds.containsKey(baId)) {
+      skip = baFeeds.get(baId).size();
+      if (baFeeds.get(baId).size() >= count) {
+        loadFeed = false;
+      }
+    } else {
+      baFeeds.put(baId, new ArrayList<BaFeed>());
+    }
+    if (loadFeed) {
       String url = ApplicationConstants.baseAppUrl
           + "actions/banewsfeed"
-          + "?clientId=1&baId=" + baId;
+          + "?clientId=1&baId=" + baId
+          + "&skip=" + skip
+          + "&count=" + (skip + count);
       Ion.getDefault(context).configure().setLogging("feed", Log.DEBUG);
       SharedPreferences prefs = context.getSharedPreferences(
           ApplicationConstants.appSharedPreference, Context.MODE_PRIVATE);
@@ -92,7 +119,7 @@ public class CommonRequestsUtility {
                 for (JsonElement jsonElement : mainFeed) {
                   output.add(new BaFeed(baId, jsonElement));
                 }
-                baFeeds.put(baId, output);
+                baFeeds.get(baId).addAll(output);
               }
               next.processBaFeed(baId, output);
             }

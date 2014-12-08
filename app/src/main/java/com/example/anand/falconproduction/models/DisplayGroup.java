@@ -46,17 +46,21 @@ public class DisplayGroup {
         // component type does not exists in many fields.
         tmp.append(field.getFieldValue().getAsString() + " </p>");
       } else {
-        JsonArray jsonArray = field.getFieldValue().getAsJsonArray();
-        if (jsonArray != null && jsonArray.size() > 0) {
-          for (JsonElement jsonElement : jsonArray) {
-            JsonObject jsonObject = jsonElement.getAsJsonObject();
-            if (jsonObject != null) {
-              tmp.append(String.format("<a href=\"#\">%s</a>", jsonObject.get("filedFileDisplayName").getAsString()));
+        if (field.getFieldValue().isJsonArray()) {
+          JsonArray jsonArray = field.getFieldValue().getAsJsonArray();
+          if (jsonArray != null && jsonArray.size() > 0) {
+            for (JsonElement jsonElement : jsonArray) {
+              JsonObject jsonObject = jsonElement.getAsJsonObject();
+              if (jsonObject != null) {
+                tmp.append(String.format("<a href=\"%s\">%s</a>", jsonObject.get("fieldFileDownloadLink").getAsString(), jsonObject.get("filedFileDisplayName").getAsString()));
+              }
             }
+            tmp.append("</p>");
+          } else {
+            tmp.append(" - </p>");
           }
-          tmp.append("</p>");
         } else {
-          tmp.append(" - </p>");
+          tmp.append(field.getFieldValue().getAsString() + " </p>");
         }
       }
     }
