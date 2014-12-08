@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@xml/list_row_selector"
+                android:padding="@dimen/ba_feed_padding">
+
+    <!-- Request Id -->
+    <TextView
+        android:id="@+id/main_action_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold" />
+
+    <!-- Request subject -->
+    <TextView
+        android:id="@+id/main_action_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/main_action_id"
+        android:layout_marginTop="1dip"
+        android:textStyle="bold" />
+
+    <!-- Request details -->
+    <TextView
+        android:id="@+id/main_request_user"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/main_action_title"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:id="@+id/main_request_time"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/main_request_user"
+        android:layout_marginTop="5dp" />
+
+</RelativeLayout>
