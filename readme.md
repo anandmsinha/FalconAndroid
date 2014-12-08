@@ -2,10 +2,10 @@
 
 1. Version 0.1.0 (Started on 8/12/2014)
     
-    1. Show basic BaMenu to user. (done)
-    2. Authentication (done)
-    3. Show BaFeed corresponding to a Ba. (done)
-    4. View a particular Ba (done)
+    1. ~~Show basic BaMenu to user.~~
+    2. ~~Authentication~~
+    3. ~~Show BaFeed corresponding to a Ba.~~
+    4. ~~View a particular Ba~~
     5. Open files which can be opened.
     6. Add request.
     7. Basic Search.
