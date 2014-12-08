@@ -16,6 +16,7 @@
     2. Add offline support for adding request.
     3. Improve ui performence.
     4. Show BaMenu using breadcrumbs and expandable list.
+    5. Caching of request view and feed data on client side using realm.
 
 3. Version 0.3.0 (Not started)
 
