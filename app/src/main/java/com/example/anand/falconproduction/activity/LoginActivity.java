@@ -87,12 +87,11 @@ public class LoginActivity extends Activity {
   }
 
   /**
-   * If user is in LoginActivity we do not have allow him going back to any other
+   * If user is in LoginActivity we do not allow him to go back to any other
    * Activity except change client activity.
    */
   @Override
   public void onBackPressed() {
-    finish();
   }
 }
 
