@@ -1,6 +1,7 @@
 package com.example.anand.falconproduction.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import java.util.List;
 
 /**
  * Created by anand on 1/12/14.
+ *
+ * Main ba feed adapter
  */
 public class FalconRequestListAdapter extends BaseAdapter implements GetBaFeed {
 
@@ -77,7 +80,10 @@ public class FalconRequestListAdapter extends BaseAdapter implements GetBaFeed {
 
   @Override
   public void processBaFeed(long baId, List<BaFeed> feeds) {
-    this.mainFeed.addAll(feeds);
-    notifyDataSetChanged();
+    if (feeds != null) {
+      Log.d("falconadapter", "count of feeds recieved " + feeds.size());
+      this.mainFeed.addAll(feeds);
+      notifyDataSetChanged();
+    }
   }
 }

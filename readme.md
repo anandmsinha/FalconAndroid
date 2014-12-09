@@ -5,12 +5,13 @@
     1. ~~Show basic BaMenu to user.~~
     2. ~~Authentication~~
     3. ~~Show BaFeed corresponding to a Ba.~~
-    4. ~~View a particular Ba~~
-    5. ~~Open files which can be opened. (Right now when a user click a link we open a browser window whith the link from there on it is handles on it's own.) This will be improved in version 0.3.~~
+    4. ~~View a particular Request.~~
+    5. ~~Open attachements. (Right now when a user clicks a link we open a browser window with the download link. From there browser handles how the file would be viewed.) This will be improved in version 0.3.~~
     6. Add request.
     7. Basic Search.
     8. Token based client indentification.
     9. ~~Load more in bafeed on scroll.~~
+    10. A logout button
 
 2. Version 0.2.0 (Not started)
 

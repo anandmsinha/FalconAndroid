@@ -31,6 +31,7 @@ public class CommonRequestsUtility {
   private static final String tag = "commonrequest";
   private static List<BaGroups> baGroups;
   private static HashMap<Long, List<BaFeed>> baFeeds = new HashMap<Long, List<BaFeed>>();
+  private static HashMap<Long, Long> baFeedsLimit = new HashMap<>();
   private static Future<JsonObject> loading;
 
   public static void getBaMap(final Context context, final GetBaMap next) {
@@ -93,7 +94,7 @@ public class CommonRequestsUtility {
           + "actions/banewsfeed"
           + "?clientId=1&baId=" + baId
           + "&skip=" + skip
-          + "&count=" + (skip + count);
+          + "&count=" + 10;
       Ion.getDefault(context).configure().setLogging("feed", Log.DEBUG);
       SharedPreferences prefs = context.getSharedPreferences(
           ApplicationConstants.appSharedPreference, Context.MODE_PRIVATE);
@@ -115,11 +116,13 @@ public class CommonRequestsUtility {
 
               List<BaFeed> output = new ArrayList<BaFeed>();
               JsonArray mainFeed = result.getAsJsonArray("baActions");
+              Long feedLimitCount = result.get("baActionsCount").getAsLong();
               if (mainFeed != null) {
                 for (JsonElement jsonElement : mainFeed) {
                   output.add(new BaFeed(baId, jsonElement));
                 }
                 baFeeds.get(baId).addAll(output);
+                baFeedsLimit.put(baId, feedLimitCount);
               }
               next.processBaFeed(baId, output);
             }

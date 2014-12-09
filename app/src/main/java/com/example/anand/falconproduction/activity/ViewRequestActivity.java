@@ -23,6 +23,8 @@ import com.koushikdutta.ion.Ion;
 
 /**
  * Created by anand on 1/12/14.
+ *
+ * Main ba feed adapter.
  */
 public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAfterDrawer {
 
