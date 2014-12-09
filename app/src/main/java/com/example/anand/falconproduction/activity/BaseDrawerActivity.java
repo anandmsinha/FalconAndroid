@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.anand.falconproduction.ActivityDecider;
 import com.example.anand.falconproduction.R;
 import com.example.anand.falconproduction.adapters.BaGroupListAdapter;
 import com.example.anand.falconproduction.interfaces.GetBaMap;
@@ -124,6 +125,10 @@ public class BaseDrawerActivity extends ActionBarActivity implements GetBaMap, A
     switch (item.getItemId()) {
       case R.id.main_search:
         return true;
+      case R.id.action_logout:
+        getSharedPreferences(ApplicationConstants.appSharedPreference, 0)
+            .edit().remove(ApplicationConstants.appAuthToken).commit();
+        startActivity(new Intent(this, ActivityDecider.class));
       default:
         return super.onOptionsItemSelected(item);
     }

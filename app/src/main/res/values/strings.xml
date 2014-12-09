@@ -11,5 +11,6 @@
     <string name="navigation_drawer_close">navigation_drawer_close</string>
     <string name="action_search">Search</string>
     <string name="add_request">Add Request</string>
+    <string name="logout">Logout</string>
 
 </resources>

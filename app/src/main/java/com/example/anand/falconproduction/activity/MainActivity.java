@@ -96,12 +96,16 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
         + "actions/banewsfeed"
         + "?clientId=1&baId=" + feedBa.getBaId()
         + "&count=10";
+    Log.d(tag, "Total feeds in adapter = " + feedsAdapter.getCount());
+    Log.d(tag, "Max feed limit for ba = " + totalFeedsCount);
     if (feedsAdapter.getCount() > 0) {
       if (feedsAdapter.getCount() >= totalFeedsCount) {
+        Log.d(tag, "Skipping loading as feed count is >= totlafeeds");
         return;
       }
       url += "&skip=" + feedsAdapter.getCount();
     }
+    Log.d(tag, "final url - " + url);
     Toast.makeText(this, "started loading feed.", Toast.LENGTH_SHORT).show();
     // Now load the feed
     loading = Ion.with(this)
@@ -121,11 +125,12 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
             long feedsLimit = result.get("baActionsCount").getAsLong();
             if (mainFeeds != null) {
               totalFeedsCount = feedsLimit;
+              Log.d(tag, "total feed limit - " + feedsLimit);
               for (JsonElement singleFeedJson : mainFeeds) {
                 feedsAdapter.add(new BaFeed(feedBa.getBaId(), singleFeedJson));
               }
             }
-            Toast.makeText(MainActivity.this, "feeds loading finished", Toast.LENGTH_LONG);
+            Toast.makeText(MainActivity.this, "feeds loading finished", Toast.LENGTH_LONG).show();
           }
         });
   }

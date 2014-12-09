@@ -11,7 +11,8 @@
     7. Basic Search.
     8. Token based client indentification.
     9. ~~Load more in bafeed on scroll.~~
-    10. A logout button
+    10. ~~A logout button.~~
+    11. Enter diffrent client.
 
 2. Version 0.2.0 (Not started)
 
@@ -20,6 +21,7 @@
     3. Improve ui performence.
     4. Show BaMenu using breadcrumbs and expandable list.
     5. Caching of request view and feed data on client side using realm for offline view.
+    6. Diffrent profiles based on clients
 
 3. Version 0.3.0 (Not started)
 
