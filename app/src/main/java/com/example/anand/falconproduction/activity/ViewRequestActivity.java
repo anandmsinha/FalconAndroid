@@ -13,7 +13,6 @@ import com.example.anand.falconproduction.R;
 import com.example.anand.falconproduction.interfaces.ProcessAfterDrawer;
 import com.example.anand.falconproduction.models.ActionModel;
 import com.example.anand.falconproduction.models.DisplayGroup;
-import com.example.anand.falconproduction.utility.ApplicationConstants;
 import com.example.anand.falconproduction.utility.LayoutBuilder;
 import com.example.anand.falconproduction.utility.SearchQueryBuilder;
 import com.example.anand.falconproduction.utility.UiBuilder;
@@ -37,7 +36,7 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
   }
 
   @Override
-  public void fillDetails() {
+  public void fillDetails(int groupCount) {
     long baId = intentBundle.getLong("baId");
     long actionId = intentBundle.getLong("actionId");
     final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -47,10 +46,8 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
     progressDialog.show();
     Ion.with(this)
         .load(SearchQueryBuilder.getAnAction(baId, actionId))
-        .setHeader(
-            "auth-token",
-            getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE).getString(
-                ApplicationConstants.appAuthToken, "token")).asJsonObject()
+        .setHeader("auth-token", authToken)
+        .asJsonObject()
         .setCallback(new FutureCallback<JsonObject>() {
           @Override
           public void onCompleted(Exception e, JsonObject result) {

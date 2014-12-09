@@ -1,6 +1,7 @@
 package com.example.anand.falconproduction.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -8,6 +9,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ import com.example.anand.falconproduction.adapters.BaGroupListAdapter;
 import com.example.anand.falconproduction.interfaces.GetBaMap;
 import com.example.anand.falconproduction.interfaces.ProcessAfterDrawer;
 import com.example.anand.falconproduction.models.BaGroups;
+import com.example.anand.falconproduction.utility.ApplicationConstants;
 import com.example.anand.falconproduction.utility.CommonRequestsUtility;
 
 import java.util.List;
@@ -41,6 +44,7 @@ public class BaseDrawerActivity extends ActionBarActivity implements GetBaMap, A
   BaGroupListAdapter mainAdapter;
   int groupId = -1;
   ProcessAfterDrawer nextMethod;
+  String authToken;
 
   /**
    * Here we instatnitate the drawer menu.
@@ -53,6 +57,10 @@ public class BaseDrawerActivity extends ActionBarActivity implements GetBaMap, A
     mainNavListView = (ListView) findViewById(R.id.main_nav_list);
     mainDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
     mainDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+    SharedPreferences preferences = getSharedPreferences(ApplicationConstants.appSharedPreference,
+        MODE_PRIVATE);
+    authToken = preferences.getString(ApplicationConstants.appAuthToken, "token");
 
     CommonRequestsUtility.getBaMap(this, this);
   }
@@ -92,9 +100,9 @@ public class BaseDrawerActivity extends ActionBarActivity implements GetBaMap, A
     try {
       getSupportActionBar().setTitle(mainAdapter.getItem(groupId).toString());
     } catch (Exception e) {
-
+      Log.e("base", "unable to set title");
     }
-    nextMethod.fillDetails();
+    nextMethod.fillDetails(mainAdapter.getCount());
   }
 
   @Override
