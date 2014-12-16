@@ -26,16 +26,13 @@ public class LoginActivity extends Activity {
 
   private EditText mUserName;
   private EditText mPassword;
-  private Button mSubmitButton;
 
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
     mUserName = (EditText) findViewById(R.id.username);
     mPassword = (EditText) findViewById(R.id.password);
-    mSubmitButton = (Button) findViewById(R.id.username_sign_in_button);
-
-    final LoginActivity mainInstance = this;
+    Button mSubmitButton = (Button) findViewById(R.id.username_sign_in_button);
 
     mSubmitButton.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -47,7 +44,7 @@ public class LoginActivity extends Activity {
           processLogin(userName, password, v);
         } else {
           Log.d(TAG, "Invalid form data submitted");
-          Toast.makeText(mainInstance, "Invalid form data", Toast.LENGTH_LONG).show();
+          Toast.makeText(LoginActivity.this, "Invalid form data", Toast.LENGTH_LONG).show();
           v.setEnabled(true);
         }
       }
@@ -71,7 +68,7 @@ public class LoginActivity extends Activity {
                 SharedPreferences sharedPreferences = getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
                 SharedPreferences.Editor tokenEditor = sharedPreferences.edit();
                 tokenEditor.putString(ApplicationConstants.appAuthToken, result.get(ApplicationConstants.serverResponseToken).getAsString());
-                tokenEditor.commit();
+                tokenEditor.commit(); // commit it instantly
                 Toast.makeText(LoginActivity.this, "Authentication done", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getApplicationContext(), ActivityDecider.class));
                 return;

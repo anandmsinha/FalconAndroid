@@ -1,8 +1,12 @@
 package com.example.anand.falconproduction.activity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,6 +42,27 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main, this);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_main, menu);
+    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+    SearchView searchView = (SearchView) menu.findItem(R.id.main_search).getActionView();
+    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+    //searchView.setIconifiedByDefault(false);
+    return true;
+  }
+
+  /**
+   * This method has been overriden so that we can put ba id into intent.
+   *
+   * @param intent - passing intent
+   */
+  @Override
+  public void startActivity(Intent intent) {
+    intent.putExtra("baId", feedBa.getBaId());
+    super.startActivity(intent);
   }
 
   @Override

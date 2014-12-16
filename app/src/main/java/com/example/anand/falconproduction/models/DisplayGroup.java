@@ -40,11 +40,13 @@ public class DisplayGroup {
     tmp.append(lineBreak);
     for (Field field : fields) {
       tmp.append("<p><b>");
-      tmp.append(field.getFieldDisplayName() + " </b> : ");
+      tmp.append(field.getFieldDisplayName());
+      tmp.append(" </b> : ");
       if (field.getFieldType().equals("fieldTypeDefault") || field.getComponentType() != 8) {
         // Means this field is not file type. Check for fieldtype is done first beacuse
         // component type does not exists in many fields.
-        tmp.append(field.getFieldValue().getAsString() + " </p>");
+        tmp.append(field.getFieldValue().getAsString());
+        tmp.append(" </p>");
       } else {
         if (field.getFieldValue().isJsonArray()) {
           JsonArray jsonArray = field.getFieldValue().getAsJsonArray();
@@ -60,7 +62,8 @@ public class DisplayGroup {
             tmp.append(" - </p>");
           }
         } else {
-          tmp.append(field.getFieldValue().getAsString() + " </p>");
+          tmp.append(field.getFieldValue().getAsString());
+          tmp.append(" </p>");
         }
       }
     }

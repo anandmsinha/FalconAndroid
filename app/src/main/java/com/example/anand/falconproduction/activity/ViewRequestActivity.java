@@ -1,6 +1,7 @@
 package com.example.anand.falconproduction.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -28,6 +29,7 @@ import com.koushikdutta.ion.Ion;
 public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAfterDrawer {
 
   private static final String tag = "ViewRequestActivity";
+  long baId;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +37,20 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
     setContentView(R.layout.view_request_activity, this);
   }
 
+  /**
+   * This method has been overriden so that we can put ba id into intent.
+   *
+   * @param intent - passing intent
+   */
+  @Override
+  public void startActivity(Intent intent) {
+    intent.putExtra("baId", baId);
+    super.startActivity(intent);
+  }
+
   @Override
   public void fillDetails(int groupCount) {
-    long baId = intentBundle.getLong("baId");
+    baId = intentBundle.getLong("baId");
     long actionId = intentBundle.getLong("actionId");
     final ProgressDialog progressDialog = new ProgressDialog(this);
     progressDialog.setTitle("Loading....");
