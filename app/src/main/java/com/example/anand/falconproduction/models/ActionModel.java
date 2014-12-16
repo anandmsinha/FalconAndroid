@@ -1,5 +1,6 @@
 package com.example.anand.falconproduction.models;
 
+import com.example.anand.falconproduction.models.view.DisplayGroup;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

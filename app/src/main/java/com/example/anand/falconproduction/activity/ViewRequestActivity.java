@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.example.anand.falconproduction.R;
 import com.example.anand.falconproduction.interfaces.ProcessAfterDrawer;
 import com.example.anand.falconproduction.models.ActionModel;
-import com.example.anand.falconproduction.models.DisplayGroup;
+import com.example.anand.falconproduction.models.view.DisplayGroup;
 import com.example.anand.falconproduction.utility.LayoutBuilder;
 import com.example.anand.falconproduction.utility.SearchQueryBuilder;
 import com.example.anand.falconproduction.utility.UiBuilder;
@@ -23,7 +23,7 @@ import com.koushikdutta.ion.Ion;
 
 /**
  * Created by anand on 1/12/14.
- *
+ * <p/>
  * Main ba feed adapter.
  */
 public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAfterDrawer {
@@ -66,12 +66,12 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
           public void onCompleted(Exception e, JsonObject result) {
             if (e != null || !result.has("businessArea")) {
               if (e != null) {
-                Log.d("viewa", e.getMessage());
+                Log.d(tag, e.getMessage());
               } else {
-                Log.d("viewa", result.toString());
+                Log.d(tag, result.toString());
               }
               progressDialog.dismiss();
-              Toast.makeText(getApplicationContext(), "Unable to fetch action right now.",
+              Toast.makeText(ViewRequestActivity.this, "Unable to fetch action right now.",
                   Toast.LENGTH_LONG).show();
               return;
             }
@@ -98,5 +98,10 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
       mainLayout.addView(linearLayout);
     }
     progressDialog.dismiss();
+  }
+
+  @Override
+  public long getBaId() {
+    return baId;
   }
 }

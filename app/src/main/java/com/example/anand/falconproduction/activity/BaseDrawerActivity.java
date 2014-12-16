@@ -39,7 +39,7 @@ import java.util.List;
  * 1. DrawerLayout with id - R.id.main_drawer_layout
  * 2. ListView in drawer layout with id - main_nav_list
  */
-public class BaseDrawerActivity extends ActionBarActivity implements GetBaMap, AdapterView.OnItemClickListener {
+public abstract class BaseDrawerActivity extends ActionBarActivity implements GetBaMap, AdapterView.OnItemClickListener {
 
   ActionBarDrawerToggle mDrawerToggle;
   DrawerLayout mainDrawerLayout;
@@ -129,10 +129,16 @@ public class BaseDrawerActivity extends ActionBarActivity implements GetBaMap, A
       case R.id.main_search:
         //startActivity(new Intent(this, SearchResultsActivity.class));
         return true;
+      case R.id.main_add_button:
+        Intent intent = new Intent(this, CreateRequestActivity.class);
+        intent.putExtra("baId", getBaId());
+        startActivity(intent);
+        return true;
       case R.id.action_logout:
         getSharedPreferences(ApplicationConstants.appSharedPreference, 0)
             .edit().remove(ApplicationConstants.appAuthToken).commit();
         startActivity(new Intent(this, ActivityDecider.class));
+        return true;
       default:
         return super.onOptionsItemSelected(item);
     }
@@ -164,4 +170,6 @@ public class BaseDrawerActivity extends ActionBarActivity implements GetBaMap, A
     intent.putExtra("group", position);
     startActivity(intent);
   }
+
+  public abstract long getBaId();
 }

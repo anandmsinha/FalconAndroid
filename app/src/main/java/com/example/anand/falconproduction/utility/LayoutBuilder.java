@@ -8,6 +8,8 @@ import com.example.anand.falconproduction.R;
 
 /**
  * Created by anand on 1/12/14.
+ *
+ * This is helper class for building layouts.
  */
 public class LayoutBuilder {
 

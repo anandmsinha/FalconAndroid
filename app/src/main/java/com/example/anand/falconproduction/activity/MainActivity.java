@@ -160,6 +160,11 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
         });
   }
 
+  @Override
+  public long getBaId() {
+    return feedBa.getBaId();
+  }
+
   /*@Override
   public void processBaFeed(long baId, List<BaFeed> feeds) {
     falconRequestListAdapter = new FalconRequestListAdapter(this, baId, getLayoutInflater(), feeds);

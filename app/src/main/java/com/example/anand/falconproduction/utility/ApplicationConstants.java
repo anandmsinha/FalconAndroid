@@ -11,7 +11,7 @@ public class ApplicationConstants {
 
     public static final String appAuthToken = "jiberkiuo";
 
-    public static final String baseAppUrl = "http://192.168.0.24:8080/falcon-dms/rest/api/";
+    public static final String baseAppUrl = "http://192.168.0.13:8080/falcon-dms/rest/api/";
 
     public static final String appLoginUrl = baseAppUrl + "setup/login";
 

@@ -36,7 +36,10 @@
         </activity>
         <activity android:name=".activity.ViewRequestActivity">
         </activity>
-
+        <activity android:name=".activity.CreateRequestActivity">
+        </activity>
+        <activity android:name=".activity.utility.MultipleFilesSelectionActivity">
+        </activity>
         <activity android:launchMode="singleTop" android:name=".activity.SearchResultsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

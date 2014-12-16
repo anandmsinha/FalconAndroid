@@ -12,5 +12,12 @@
     <string name="action_search">Search</string>
     <string name="add_request">Add Request</string>
     <string name="logout">Logout</string>
+    <string name="New">New Folder</string>
+    <string name="ext">External</string>
+    <string name="ok">OK</string>
+    <string name="all">Check All</string>
+    <string name="cancel">Cancel</string>
+    <string name="Int">Internal</string>
+    <string name="none">Uncheck All</string>
 
 </resources>

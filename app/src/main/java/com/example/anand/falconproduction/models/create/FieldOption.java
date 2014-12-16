@@ -29,4 +29,73 @@ public class FieldOption {
     entryDescription = jsonObject.get("entryDescription").getAsString();
     displayName = jsonObject.get("displayName").getAsString();
   }
+
+  public long getId() {
+    return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
+  }
+
+  @Override
+  public String toString() {
+    return "FieldOption{" +
+        "id=" + id +
+        ", entryRenderUpdateAction=" + entryRenderUpdateAction +
+        ", name='" + name + '\'' +
+        ", entryOrder=" + entryOrder +
+        ", entryActive=" + entryActive +
+        ", entryDescription='" + entryDescription + '\'' +
+        ", displayName='" + displayName + '\'' +
+        '}';
+  }
+
+  public boolean isEntryRenderUpdateAction() {
+    return entryRenderUpdateAction;
+  }
+
+  public void setEntryRenderUpdateAction(boolean entryRenderUpdateAction) {
+    this.entryRenderUpdateAction = entryRenderUpdateAction;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public long getEntryOrder() {
+    return entryOrder;
+  }
+
+  public void setEntryOrder(long entryOrder) {
+    this.entryOrder = entryOrder;
+  }
+
+  public boolean isEntryActive() {
+    return entryActive;
+  }
+
+  public void setEntryActive(boolean entryActive) {
+    this.entryActive = entryActive;
+  }
+
+  public String getEntryDescription() {
+    return entryDescription;
+  }
+
+  public void setEntryDescription(String entryDescription) {
+    this.entryDescription = entryDescription;
+  }
+
+  public String getDisplayName() {
+    return displayName;
+  }
+
+  public void setDisplayName(String displayName) {
+    this.displayName = displayName;
+  }
 }
