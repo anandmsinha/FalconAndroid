@@ -3,6 +3,7 @@ package com.example.anand.falconproduction.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import java.util.Map;
  */
 public class CreateRequestActivity extends BaseDrawerActivity implements ProcessAfterDrawer {
 
+  private static final String TAG = "CreateRequestActivity";
   long baId;
   RequestForm requestForm;
 
@@ -95,7 +97,15 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
       if (files != null && !files.isEmpty()) {
         for (DisplayGroupAdvanced displayGroupAdvanced : requestForm.getDisplayGroupsAdvanced()) {
           if (displayGroupAdvanced.getFieldsMap().containsKey((long) requestCode)) {
-            displayGroupAdvanced.getFieldsMap().get((long) requestCode).setFiles(files);
+            FieldAdvanced tmpFieldAdvanced = displayGroupAdvanced.getFieldsMap().get((long) requestCode);
+            // Todo - Handle case for same file selected twice.
+            tmpFieldAdvanced.getFiles().addAll(files);
+            Log.d(TAG, "Size of files recieved " + files.size());
+            String existingFiles = tmpFieldAdvanced.getFilesNameTextView().getText().toString();
+            for (File file : files) {
+              existingFiles += file.getAbsolutePath() + ", ";
+            }
+            tmpFieldAdvanced.getFilesNameTextView().setText(existingFiles);
           }
         }
       }
@@ -114,6 +124,9 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
           View formView = entry.getValue().getUiComponent(this);
           if (formView != null) {
             displayGroupBlock.addView(UiBuilder.createBoldTextView(this, entry.getValue().getFieldDisplayName()));
+            if (entry.getValue().getFieldUiComponentType() == 8) {
+              displayGroupBlock.addView(entry.getValue().getFilesNameTextView());
+            }
             displayGroupBlock.addView(formView);
           }
         }

@@ -3,9 +3,14 @@ package com.example.anand.falconproduction.models.create;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.MultiAutoCompleteTextView;
+import android.widget.TextView;
 
+import com.example.anand.falconproduction.R;
 import com.example.anand.falconproduction.activity.utility.MultipleFilesSelectionActivity;
+import com.example.anand.falconproduction.adapters.UserAutoCompleteAdapter;
 import com.example.anand.falconproduction.utility.UiBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -37,9 +42,11 @@ public class FieldAdvanced {
   private String fieldName;
   private String fieldRegex;
 
+  // The following 4 views are limited to filelist data type
   private View formComponent;
   private HashMap<String, Long> fieldOptionsMap;
   private ArrayList<File> files = new ArrayList<>();
+  private TextView filesNameTextView;
 
   public FieldAdvanced(JsonElement jsonElement) {
     JsonObject jsonObject = jsonElement.getAsJsonObject();
@@ -63,6 +70,14 @@ public class FieldAdvanced {
     fieldOrderId = jsonObject.get("fieldOrderId").getAsLong();
     fieldName = jsonObject.get("fieldOrderId").getAsString();
     fieldRegex = jsonObject.get("fieldRegex").getAsString();
+  }
+
+  public TextView getFilesNameTextView() {
+    return filesNameTextView;
+  }
+
+  public void setFilesNameTextView(TextView filesNameTextView) {
+    this.filesNameTextView = filesNameTextView;
   }
 
   public ArrayList<File> getFiles() {
@@ -115,14 +130,21 @@ public class FieldAdvanced {
           }
         });
         formComponent = mainUploadButton;
+        // Create a list view
+        filesNameTextView = UiBuilder.getTextView(activity, "");
       } else if (actualType.equals("BooleanData")) {
         formComponent = UiBuilder.createCheckbox(activity);
       } else if (actualType.equals("TextData")) {
         formComponent = UiBuilder.createTextInput(activity);
       } else if (actualType.equals("UserDataList")) {
-        formComponent = UiBuilder.createAutoCompleteText(activity);
+        MultiAutoCompleteTextView multiAutoCompleteTextView = new MultiAutoCompleteTextView(activity);
+        multiAutoCompleteTextView.setAdapter(new UserAutoCompleteAdapter(activity, android.R.layout.simple_dropdown_item_1line));
+        multiAutoCompleteTextView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        formComponent = multiAutoCompleteTextView;
       } else if (actualType.equals("UserData")) {
-        formComponent = UiBuilder.createAutoCompleteText(activity);
+        AutoCompleteTextView autoCompleteTextView = UiBuilder.createAutoCompleteText(activity);
+        autoCompleteTextView.setAdapter(new UserAutoCompleteAdapter(activity, android.R.layout.simple_dropdown_item_1line));
+        formComponent = autoCompleteTextView;
       } else {
         formComponent = UiBuilder.createEditText(activity);
       }

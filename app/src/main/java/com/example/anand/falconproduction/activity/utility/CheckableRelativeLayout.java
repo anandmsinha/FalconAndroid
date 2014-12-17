@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 /**
  * Extension of a relative layout to provide a checkable behaviour
  *
- * @author marvinlabs
  */
 public class CheckableRelativeLayout extends RelativeLayout implements
     Checkable {

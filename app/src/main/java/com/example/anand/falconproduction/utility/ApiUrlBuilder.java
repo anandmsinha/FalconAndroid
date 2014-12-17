@@ -12,4 +12,9 @@ public class ApiUrlBuilder {
         + "actions/requestForm?clientId=1&baId=" + baId;
   }
 
+  public static String getUserAutoComplete(String name) {
+    return ApplicationConstants.baseAppUrl
+        + "actions/usersAutocomplete?clientId=1&name=" + name;
+  }
+
 }

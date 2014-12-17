@@ -64,8 +64,7 @@ public class UiBuilder {
   }
 
   public static AutoCompleteTextView createAutoCompleteText(Activity activity) {
-    AutoCompleteTextView autoCompleteTextView = new AutoCompleteTextView(activity);
-    autoCompleteTextView.setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_dropdown_item_1line, new String[] {"ram", "balram"}));
-    return autoCompleteTextView;
+    return new AutoCompleteTextView(activity);
   }
+
 }
