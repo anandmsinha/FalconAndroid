@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.anand.falconproduction.ActivityDecider;
 import com.example.anand.falconproduction.R;
@@ -30,6 +31,7 @@ import com.example.anand.falconproduction.utility.ApplicationConstants;
 import com.example.anand.falconproduction.utility.CommonRequestsUtility;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -50,6 +52,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
   int groupId = -1;
   ProcessAfterDrawer nextMethod;
   String authToken;
+  HashMap<Long, BaGroups> baGroupsMap = new HashMap<>();
 
   /**
    * Here we instatnitate the drawer menu.
@@ -76,7 +79,23 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
     if (list == null) {
       list = new ArrayList<>();
     }
-    mainAdapter = new BaGroupListAdapter(getLayoutInflater(), list);
+    /**
+     * fetch only the Ba since right now we are creating linear menu.
+     */
+    List<BaGroups> finalList = new ArrayList<>();
+    for (BaGroups baGroups : list) {
+      if (baGroups.isYield()) {
+        if (baGroups.isGroup()) {
+          finalList.addAll(baGroups.getAllBaInGroup());
+        } else {
+          finalList.add(baGroups);
+        }
+      }
+    }
+    for (BaGroups baGroups : finalList) {
+      baGroupsMap.put(baGroups.getBaId(), baGroups);
+    }
+    mainAdapter = new BaGroupListAdapter(getLayoutInflater(), finalList);
     mainNavListView.setAdapter(mainAdapter);
     mainNavListView.setSelector(android.R.color.holo_blue_dark);
     mainNavListView.setOnItemClickListener(this);
@@ -136,10 +155,20 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
         //startActivity(new Intent(this, SearchResultsActivity.class));
         return true;
       case R.id.main_add_button:
-        Intent intent = new Intent(this, CreateRequestActivity.class);
-        intent.putExtra("baId", getBaId());
-        intent.putExtra("group", groupId);
-        startActivity(intent);
+        BaGroups tmpBaGroup = baGroupsMap.get(getBaId());
+        if (tmpBaGroup != null) {
+          // check if user has create permission in Ba.
+          if (tmpBaGroup.isBaCreatePermission()) {
+            Intent intent = new Intent(this, CreateRequestActivity.class);
+            intent.putExtra("baId", getBaId());
+            intent.putExtra("group", groupId);
+            startActivity(intent);
+          } else {
+            Toast.makeText(this, "You don't have create permission in this Ba.", Toast.LENGTH_LONG).show();
+          }
+        } else {
+          Toast.makeText(this, "Some internal error has occured.", Toast.LENGTH_LONG).show();
+        }
         return true;
       case R.id.action_logout:
         getSharedPreferences(ApplicationConstants.appSharedPreference, 0)

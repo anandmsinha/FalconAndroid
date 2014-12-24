@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class BaGroupListAdapter extends BaseAdapter {
 
-  List<BaGroups> groups = new ArrayList<BaGroups>();
+  //List<BaGroups> groups = new ArrayList<BaGroups>();
   LayoutInflater inflater;
   /**
    * This variable contains only ba which are yieldable
@@ -29,9 +29,9 @@ public class BaGroupListAdapter extends BaseAdapter {
   public BaGroupListAdapter(LayoutInflater inflater, List<BaGroups> entries) {
     this.inflater = inflater;
     if (entries != null) {
-      this.groups.addAll(entries);
+      //this.groups.addAll(entries);
+      this.finalList.addAll(entries);
     }
-    filterGroups();
   }
 
   @Override
@@ -61,7 +61,7 @@ public class BaGroupListAdapter extends BaseAdapter {
     return convertView;
   }
 
-  private void filterGroups() {
+  /*private void filterGroups() {
     Iterator<BaGroups> it = groups.iterator();
     finalList.clear();
     while (it.hasNext()) {
@@ -76,5 +76,5 @@ public class BaGroupListAdapter extends BaseAdapter {
         it.remove();
       }
     }
-  }
+  }*/
 }

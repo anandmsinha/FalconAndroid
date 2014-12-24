@@ -46,7 +46,7 @@ public class BaGroups {
    * @return - list of bamenu's which are ba's
    */
   public List<BaGroups> getAllBaInGroup() {
-    ArrayList<BaGroups> output = new ArrayList<BaGroups>();
+    ArrayList<BaGroups> output = new ArrayList<>();
     if (isGroup && items != null && !items.isEmpty()) {
       for (BaGroups baGroups : items) {
         if (baGroups.isGroup()) {

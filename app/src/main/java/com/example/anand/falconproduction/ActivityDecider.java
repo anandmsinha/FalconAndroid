@@ -23,7 +23,7 @@ public class ActivityDecider extends Activity {
       String token = sharedPreferences.getString(ApplicationConstants.clientToken, "token");
       String url = "";
       if (token.equals("anand")) {
-        url = "http://192.168.0.11:8080/falcon-dms/rest/api/";
+        url = "http://192.168.0.04:8080/falcon-dms/rest/api/";
         ApplicationConstants.setClientId(1L);
       } else if (token.equals("6081test")) {
         url = "https://mytbits.com:6081/falcon-dms/rest/api/";

@@ -148,8 +148,8 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
             }
 
             JsonArray mainFeeds = result.getAsJsonArray("baActions");
-            long feedsLimit = result.get("baActionsCount").getAsLong();
             if (mainFeeds != null) {
+              long feedsLimit = result.get("baActionsCount").getAsLong();
               totalFeedsCount = feedsLimit;
               Log.d(tag, "total feed limit - " + feedsLimit);
               for (JsonElement singleFeedJson : mainFeeds) {
