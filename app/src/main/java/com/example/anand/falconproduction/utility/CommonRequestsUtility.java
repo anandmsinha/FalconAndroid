@@ -38,7 +38,7 @@ public class CommonRequestsUtility {
     if (baGroups == null) {
       String url = ApplicationConstants.baseAppUrl
           + "bagroups/permissible"
-          + "?clientId=1&userId=1";
+          + "?clientId=" + ApiUrlBuilder.getClientId() + "&userId=1";
       Ion.getDefault(context).configure().setLogging("Net", Log.DEBUG);
       Ion.with(context)
           .load(url)
@@ -92,7 +92,7 @@ public class CommonRequestsUtility {
     if (loadFeed) {
       String url = ApplicationConstants.baseAppUrl
           + "actions/banewsfeed"
-          + "?clientId=1&baId=" + baId
+          + "?clientId=" + ApiUrlBuilder.getClientId() + "&baId=" + baId
           + "&skip=" + skip
           + "&count=" + 10;
       Ion.getDefault(context).configure().setLogging("feed", Log.DEBUG);

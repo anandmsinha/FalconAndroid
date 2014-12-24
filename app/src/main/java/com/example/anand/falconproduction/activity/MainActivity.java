@@ -19,6 +19,7 @@ import com.example.anand.falconproduction.R;
 import com.example.anand.falconproduction.interfaces.ProcessAfterDrawer;
 import com.example.anand.falconproduction.models.BaFeed;
 import com.example.anand.falconproduction.models.BaGroups;
+import com.example.anand.falconproduction.utility.ApiUrlBuilder;
 import com.example.anand.falconproduction.utility.ApplicationConstants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -119,7 +120,7 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
     }
     String url = ApplicationConstants.baseAppUrl
         + "actions/banewsfeed"
-        + "?clientId=1&baId=" + feedBa.getBaId()
+        + "?clientId=" + ApiUrlBuilder.getClientId() + "&baId=" + feedBa.getBaId()
         + "&count=10";
     Log.d(tag, "Total feeds in adapter = " + feedsAdapter.getCount());
     Log.d(tag, "Max feed limit for ba = " + totalFeedsCount);

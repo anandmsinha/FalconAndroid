@@ -45,6 +45,7 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
   @Override
   public void startActivity(Intent intent) {
     intent.putExtra("baId", baId);
+    intent.putExtra("group", groupId);
     super.startActivity(intent);
   }
 

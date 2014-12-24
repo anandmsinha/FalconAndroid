@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.anand.falconproduction.R;
+import com.example.anand.falconproduction.utility.ApiUrlBuilder;
 import com.example.anand.falconproduction.utility.ApplicationConstants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -113,7 +114,7 @@ public class SearchResultsActivity extends Activity {
     }
     String url = ApplicationConstants.baseAppUrl
         + "actions/search"
-        + "?clientId=1&baId=" + baId
+        + "?clientId=" + ApiUrlBuilder.getClientId() + "&baId=" + baId
         + "&search=" + query
         + "&count=10";
     if (searchResultsAdapter.getCount() > 0) {

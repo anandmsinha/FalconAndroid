@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.anand.falconproduction.ActivityDecider;
 import com.example.anand.falconproduction.R;
+import com.example.anand.falconproduction.utility.ApiUrlBuilder;
 import com.example.anand.falconproduction.utility.ApplicationConstants;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
@@ -53,10 +54,10 @@ public class LoginActivity extends Activity {
 
   private void processLogin(final String username, final String password, final View v) {
     Ion.with(getApplicationContext())
-        .load(ApplicationConstants.appLoginUrl)
+        .load(ApiUrlBuilder.getLogin())
         .setBodyParameter("username", username)
         .setBodyParameter("password", password)
-        .setBodyParameter("clientId", "1")
+        .setBodyParameter("clientId", ApiUrlBuilder.getClientId())
         .asJsonObject()
         .setCallback(new FutureCallback<JsonObject>() {
           @Override
@@ -70,7 +71,7 @@ public class LoginActivity extends Activity {
                 tokenEditor.putString(ApplicationConstants.appAuthToken, result.get(ApplicationConstants.serverResponseToken).getAsString());
                 tokenEditor.commit(); // commit it instantly
                 Toast.makeText(LoginActivity.this, "Authentication done", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(getApplicationContext(), ActivityDecider.class));
+                startActivity(new Intent(LoginActivity.this, ActivityDecider.class));
                 return;
               }
               Log.i(TAG, "Output - " + result.toString());

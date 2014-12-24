@@ -14,6 +14,8 @@ import java.util.List;
 
 /**
  * Created by anand on 28/11/14.
+ *
+ * Main left menu bar
  */
 public class BaGroupListAdapter extends BaseAdapter {
 

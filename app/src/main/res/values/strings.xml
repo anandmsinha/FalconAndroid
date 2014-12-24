@@ -19,5 +19,7 @@
     <string name="cancel">Cancel</string>
     <string name="Int">Internal</string>
     <string name="none">Uncheck All</string>
+    <string name="token">Enter Token</string>
+    <string name="submit">Submit</string>
 
 </resources>

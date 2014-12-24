@@ -28,6 +28,6 @@ public class SearchQueryBuilder {
    * @return - base url
    */
   private static String getBaseClientAndUserIds() {
-    return searchBase + "?clientId=" + 1 + "&userId=" + 1;
+    return searchBase + "?clientId=" + ApiUrlBuilder.getClientId() + "&userId=" + 1;
   }
 }

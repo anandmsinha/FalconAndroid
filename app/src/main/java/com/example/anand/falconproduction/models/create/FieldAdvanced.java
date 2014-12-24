@@ -1,14 +1,17 @@
 package com.example.anand.falconproduction.models.create;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.text.InputType;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
-import com.example.anand.falconproduction.R;
 import com.example.anand.falconproduction.activity.utility.MultipleFilesSelectionActivity;
 import com.example.anand.falconproduction.adapters.UserAutoCompleteAdapter;
 import com.example.anand.falconproduction.utility.UiBuilder;
@@ -17,7 +20,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,23 +35,24 @@ import java.util.List;
 public class FieldAdvanced {
 
   private String fieldType;
-  private String fieldDisplayName;
+  private transient String fieldDisplayName;
   private long fieldId;
-  private String fieldRegexErrorMessage;
+  private transient String fieldRegexErrorMessage;
   private boolean fieldIsRequired;
   private boolean fieldHasOptions;
-  private long fieldUiComponentType;
-  private List<FieldOption> fieldOptions;
-  private String fieldRequiredErrorMessage;
-  private long fieldOrderId;
+  private transient long fieldUiComponentType;
+  private transient List<FieldOption> fieldOptions;
+  private transient String fieldRequiredErrorMessage;
+  private transient long fieldOrderId;
   private String fieldName;
-  private String fieldRegex;
-
-  // The following 4 views are limited to filelist data type
-  private View formComponent;
-  private HashMap<String, Long> fieldOptionsMap;
-  private ArrayList<File> files = new ArrayList<>();
-  private TextView filesNameTextView;
+  private transient String fieldRegex;
+  private String fieldValue;
+  private List<String> fieldValues = new ArrayList<>();
+  // The following 5 properties are limited to filelist data type
+  private transient View formComponent;
+  private transient HashMap<String, Long> fieldOptionsMap;
+  private transient ArrayList<File> files = new ArrayList<>();
+  private transient TextView filesNameTextView;
 
   public FieldAdvanced(JsonElement jsonElement) {
     JsonObject jsonObject = jsonElement.getAsJsonObject();
@@ -70,6 +76,26 @@ public class FieldAdvanced {
     fieldOrderId = jsonObject.get("fieldOrderId").getAsLong();
     fieldName = jsonObject.get("fieldOrderId").getAsString();
     fieldRegex = jsonObject.get("fieldRegex").getAsString();
+  }
+
+  public List<String> getFieldValues() {
+    return fieldValues;
+  }
+
+  public void setFieldValues(List<String> fieldValues) {
+    this.fieldValues = fieldValues;
+  }
+
+  public String getFieldValue() {
+    return fieldValue;
+  }
+
+  public void setFieldValue(String fieldValue) {
+    this.fieldValue = fieldValue;
+  }
+
+  public View getFormComponent() {
+    return formComponent;
   }
 
   public TextView getFilesNameTextView() {
@@ -97,9 +123,9 @@ public class FieldAdvanced {
   }
 
   /**
-   * This method return the form component of the field. Here formComponent
+   * This method returns the form component of the field. Here formComponent
    * variable is instantiated and this variable is later used to keep track
-   * of value as it is more efficient than using id's to tarck values.
+   * of value as it is more efficient than using id's to track values.
    *
    * @param activity - context
    * @return - form component of field
@@ -117,10 +143,10 @@ public class FieldAdvanced {
           fieldOptionsMap.put(fieldOption.getDisplayName(), fieldOption.getId());
         }
         formComponent = UiBuilder.createSpinner(activity, fieldOptionsMap.keySet());
-      } else if (actualType.equals("StringData") || actualType.equals("IntegerData")) {
+      } else if (actualType.equals("StringData") || actualType.equals("IntegerData") || actualType.equals("RealData")) {
         // Not using regex (matches method) above as it is a costly operation and most of the actualTypes will matches StringData in rare case they will try to match beyong that.
         formComponent = UiBuilder.createEditText(activity);
-      } else if (actualType.equals("FileDataList")) {
+      } else if (actualType.equals("FileDataList") || actualType.equals("FileData")) {
         Button mainUploadButton = UiBuilder.createButton(activity, "Select file");
         mainUploadButton.setOnClickListener(new View.OnClickListener() {
           @Override
@@ -132,6 +158,7 @@ public class FieldAdvanced {
         formComponent = mainUploadButton;
         // Create a list view
         filesNameTextView = UiBuilder.getTextView(activity, "");
+        // for removing files use - http://developer.android.com/guide/topics/ui/dialogs.html (Pick a color example)
       } else if (actualType.equals("BooleanData")) {
         formComponent = UiBuilder.createCheckbox(activity);
       } else if (actualType.equals("TextData")) {
@@ -145,6 +172,48 @@ public class FieldAdvanced {
         AutoCompleteTextView autoCompleteTextView = UiBuilder.createAutoCompleteText(activity);
         autoCompleteTextView.setAdapter(new UserAutoCompleteAdapter(activity, android.R.layout.simple_dropdown_item_1line));
         formComponent = autoCompleteTextView;
+      } else if (actualType.equals("DateData")) {
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM d, yyyy");
+        final EditText dateInputText = UiBuilder.createEditText(activity);
+        dateInputText.setInputType(InputType.TYPE_NULL);
+        Calendar newCalender = Calendar.getInstance();
+        final DatePickerDialog pickDateDialog = new DatePickerDialog(activity, new DatePickerDialog.OnDateSetListener() {
+          @Override
+          public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            Calendar newDate = Calendar.getInstance();
+            newDate.set(year, monthOfYear, dayOfMonth);
+            dateInputText.setText(simpleDateFormat.format(newDate.getTime()));
+          }
+        }, newCalender.get(Calendar.YEAR), newCalender.get(Calendar.MONTH), newCalender.get(Calendar.DAY_OF_MONTH));
+        dateInputText.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            pickDateDialog.show();
+          }
+        });
+        formComponent = dateInputText;
+      } else if (actualType.equals("DateTimeData")) {
+        // Right now in dat time also we only take date.
+        // Todo - add way to input time also.
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d-MMM-yyyy,HH:mm:ss aaa");
+        final EditText dateInputText = UiBuilder.createEditText(activity);
+        dateInputText.setInputType(InputType.TYPE_NULL);
+        Calendar newCalender = Calendar.getInstance();
+        final DatePickerDialog pickDateDialog = new DatePickerDialog(activity, new DatePickerDialog.OnDateSetListener() {
+          @Override
+          public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            Calendar newDate = Calendar.getInstance();
+            newDate.set(year, monthOfYear, dayOfMonth);
+            dateInputText.setText(simpleDateFormat.format(newDate.getTime()));
+          }
+        }, newCalender.get(Calendar.YEAR), newCalender.get(Calendar.MONTH), newCalender.get(Calendar.DAY_OF_MONTH));
+        dateInputText.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            pickDateDialog.show();
+          }
+        });
+        formComponent = dateInputText;
       } else {
         formComponent = UiBuilder.createEditText(activity);
       }

@@ -55,6 +55,7 @@ public class DisplayGroup {
               JsonObject jsonObject = jsonElement.getAsJsonObject();
               if (jsonObject != null) {
                 tmp.append(String.format("<a href=\"%s\">%s</a>", jsonObject.get("fieldFileDownloadLink").getAsString(), jsonObject.get("filedFileDisplayName").getAsString()));
+                tmp.append(",  ");
               }
             }
             tmp.append("</p>");

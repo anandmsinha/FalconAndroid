@@ -29,11 +29,12 @@ import com.example.anand.falconproduction.models.BaGroups;
 import com.example.anand.falconproduction.utility.ApplicationConstants;
 import com.example.anand.falconproduction.utility.CommonRequestsUtility;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by anand on 28/11/14.
- *
+ * <p/>
  * To extend this class you should have following elements in your
  * layout file.
  * 1. DrawerLayout with id - R.id.main_drawer_layout
@@ -52,6 +53,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
 
   /**
    * Here we instatnitate the drawer menu.
+   *
    * @param resId - resource id
    */
   public void setContentView(int resId, ProcessAfterDrawer next) {
@@ -71,6 +73,9 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
 
   @Override
   public void processBaMap(List<BaGroups> list) {
+    if (list == null) {
+      list = new ArrayList<>();
+    }
     mainAdapter = new BaGroupListAdapter(getLayoutInflater(), list);
     mainNavListView.setAdapter(mainAdapter);
     mainNavListView.setSelector(android.R.color.holo_blue_dark);
@@ -103,6 +108,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
     }
     try {
       getSupportActionBar().setTitle(mainAdapter.getItem(groupId).toString());
+      mainNavListView.setSelection(groupId);
     } catch (Exception e) {
       Log.e("base", "unable to set title");
     }
@@ -132,11 +138,12 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
       case R.id.main_add_button:
         Intent intent = new Intent(this, CreateRequestActivity.class);
         intent.putExtra("baId", getBaId());
+        intent.putExtra("group", groupId);
         startActivity(intent);
         return true;
       case R.id.action_logout:
         getSharedPreferences(ApplicationConstants.appSharedPreference, 0)
-            .edit().remove(ApplicationConstants.appAuthToken).commit();
+            .edit().remove(ApplicationConstants.appAuthToken).remove(ApplicationConstants.clientToken).commit();
         startActivity(new Intent(this, ActivityDecider.class));
         return true;
       default:

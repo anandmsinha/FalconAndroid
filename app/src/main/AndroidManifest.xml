@@ -32,6 +32,10 @@
             android:noHistory="true">
         </activity>
         <activity
+            android:name=".activity.ClientDeciderActivity"
+            android:noHistory="true">
+        </activity>
+        <activity
             android:name="com.example.anand.falconproduction.activity.MainActivity">
         </activity>
         <activity android:name=".activity.ViewRequestActivity">
@@ -40,15 +44,20 @@
         </activity>
         <activity android:name=".activity.utility.MultipleFilesSelectionActivity">
         </activity>
-        <activity android:launchMode="singleTop" android:name=".activity.SearchResultsActivity">
+        <activity
+            android:name=".activity.SearchResultsActivity"
+            android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
-            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
         </activity>
+
         <meta-data
-        	      android:name="android.app.default_searchable"
-        	      android:value=".activity.SearchResultsActivity" />
+            android:name="android.app.default_searchable"
+            android:value=".activity.SearchResultsActivity"/>
     </application>
 
 </manifest>

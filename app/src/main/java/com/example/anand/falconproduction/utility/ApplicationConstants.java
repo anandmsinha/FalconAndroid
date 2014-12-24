@@ -7,21 +7,26 @@ package com.example.anand.falconproduction.utility;
  * </p>
  */
 public class ApplicationConstants {
-    public static final String appSharedPreference = "app.falcon.production";
+  public static final String appSharedPreference = "app.falcon.production";
 
-    public static final String appAuthToken = "jiberkiuo";
+  public static final String appAuthToken = "jiberkiuo";
 
-    public static final String baseAppUrl = "http://192.168.0.02:8080/falcon-dms/rest/api/";
+  public static String baseAppUrl = getBaseAppUrl();
 
-    public static final String appLoginUrl = baseAppUrl + "setup/login";
+  public static final String serverResponseToken = "token";
 
-    public static final String serverResponseToken = "token";
+  public static final String clientToken = "clientToken";
 
-    public static final String serverConfigType = "type";
+  public static long clientId = 1L;
 
-    public static final String configTypeVersion = "version";
+  private static String getBaseAppUrl() {
+    // put logic of determining base app url
+    return "http://192.168.0.11:8080/falcon-dms/rest/api/";
+  }
 
-    public static final String configTypeUrl = "urls";
+  public static void setBaseAppUrl(String s) {
+    baseAppUrl = s;
+  }
 
-    public static final String configTypeConfig = "config";
+  public static void setClientId(long id) { clientId = id; }
 }
