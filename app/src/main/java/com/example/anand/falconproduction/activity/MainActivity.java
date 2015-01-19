@@ -66,6 +66,7 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
   public void startActivity(Intent intent) {
     Log.d(tag, "startActivity called");
     intent.putExtra("baId", feedBa.getBaId());
+    intent.putExtra("group", groupId);
     super.startActivity(intent);
   }
 

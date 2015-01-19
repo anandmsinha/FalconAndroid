@@ -212,6 +212,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     Log.d(TAG, "onItemCLick called");
     Intent intent = new Intent(this, MainActivity.class);
+    groupId = position;
     intent.putExtra("group", position);
     startActivity(intent);
   }
