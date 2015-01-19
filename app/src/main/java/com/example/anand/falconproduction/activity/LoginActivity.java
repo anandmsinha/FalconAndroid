@@ -23,12 +23,13 @@ import com.koushikdutta.ion.Ion;
  */
 public class LoginActivity extends Activity {
 
-  public static final String TAG = "login";
+  public static final String TAG = LoginActivity.class.getName();
 
   private EditText mUserName;
   private EditText mPassword;
 
   public void onCreate(Bundle savedInstanceState) {
+    Log.d(TAG, "onCreate called");
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
     mUserName = (EditText) findViewById(R.id.username);
@@ -53,6 +54,7 @@ public class LoginActivity extends Activity {
   }
 
   private void processLogin(final String username, final String password, final View v) {
+    Log.d(TAG, "processLogin called");
     Ion.with(getApplicationContext())
         .load(ApiUrlBuilder.getLogin())
         .setBodyParameter("username", username)

@@ -35,6 +35,8 @@ import java.util.Map;
  */
 public class SearchResultsActivity extends Activity {
 
+  private final static String TAG = SearchResultsActivity.class.getName();
+
   ListView mListView;
   Future<JsonObject> loading;
   ArrayAdapter<JsonObject> searchResultsAdapter;
@@ -45,6 +47,7 @@ public class SearchResultsActivity extends Activity {
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
+    Log.d(TAG, "onCreate called");
     super.onCreate(savedInstanceState);
     setContentView(R.layout.search_results);
     mListView = (ListView) findViewById(R.id.search_results_list);
@@ -56,6 +59,7 @@ public class SearchResultsActivity extends Activity {
   }
 
   private void handleIntent(Intent intent) {
+    Log.d(TAG, "handleIntent called");
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
       query = intent.getStringExtra(SearchManager.QUERY);
       baId = intent.getLongExtra("baId", 0);
@@ -107,7 +111,7 @@ public class SearchResultsActivity extends Activity {
   }
 
   private void load() {
-    Log.d("search", "load method called");
+    Log.d(TAG, "load method called");
     if (loading != null && !loading.isDone() && !loading.isCancelled()) {
       Log.d("search", "loading cancelled");
       return;

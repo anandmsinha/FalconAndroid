@@ -33,7 +33,7 @@ import com.koushikdutta.ion.Ion;
  */
 public class MainActivity extends BaseDrawerActivity implements ProcessAfterDrawer {
 
-  private static final String tag = "main_activity";
+  private static final String tag = MainActivity.class.getName();
   Future<JsonObject> loading;
   ArrayAdapter<BaFeed> feedsAdapter;
   long totalFeedsCount = 0;
@@ -41,12 +41,14 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    Log.d(tag, "onCreate called");
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main, this);
   }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
+    Log.d(tag, "onCreateOptionsMenu called");
     getMenuInflater().inflate(R.menu.menu_main, menu);
     SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
     SearchView searchView = (SearchView) menu.findItem(R.id.main_search).getActionView();
@@ -62,12 +64,14 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
    */
   @Override
   public void startActivity(Intent intent) {
+    Log.d(tag, "startActivity called");
     intent.putExtra("baId", feedBa.getBaId());
     super.startActivity(intent);
   }
 
   @Override
   public void fillDetails(int groupsSize) {
+    Log.d(tag, "fillDetails called");
     if (groupsSize != 0) {
       feedBa = mainAdapter.getItem(groupId);
       // initialize the adapter
@@ -115,6 +119,7 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
    * on then do not process.
    */
   private void load() {
+    Log.d(tag, "load called");
     if (loading != null && !loading.isDone() && !loading.isCancelled()) {
       return;
     }

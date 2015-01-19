@@ -41,19 +41,21 @@ import java.util.Map;
  */
 public class CreateRequestActivity extends BaseDrawerActivity implements ProcessAfterDrawer, View.OnClickListener {
 
-  private static final String TAG = "CreateRequestActivity";
+  private static final String TAG = CreateRequestActivity.class.getName();
   long baId;
   RequestForm requestForm;
   ProgressDialog mProgressDialog;
 
   @Override
   protected void onCreate(Bundle savedInstance) {
+    Log.d(TAG, "onCreate called");
     super.onCreate(savedInstance);
     setContentView(R.layout.create_request, this);
   }
 
   @Override
   public void fillDetails(int groupCount) {
+    Log.d(TAG, "fillDetails called");
     baId = intentBundle.getLong("baId");
     final ProgressDialog progressDialog = new ProgressDialog(this);
     progressDialog.setTitle("Loading....");
@@ -86,6 +88,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
    */
   @Override
   public void startActivity(Intent intent) {
+    Log.d(TAG, "startActivity called");
     intent.putExtra("baId", baId);
     intent.putExtra("group", groupId);
     super.startActivity(intent);
@@ -102,6 +105,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
   @Override
   @SuppressWarnings("unchecked")
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    Log.d(TAG, "onActivityResult called");
     if (requestCode > 0 && resultCode == RESULT_OK) {
       ArrayList<File> files = (ArrayList<File>) data.getSerializableExtra("upload");
       if (files != null && !files.isEmpty()) {
@@ -123,6 +127,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
   }
 
   private void buildUi(ProgressDialog progressDialog) {
+    Log.d(TAG, "buildUi called");
     LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main_request_create_content);
     if (requestForm != null) {
       for (DisplayGroupAdvanced displayGroupAdvanced : requestForm.getDisplayGroupsAdvanced()) {
@@ -153,6 +158,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
 
   @Override
   public void onClick(View v) {
+    Log.d(TAG, "onClick called");
     v.setEnabled(false);
 
     FormValidator formValidator = requestForm.isValid();

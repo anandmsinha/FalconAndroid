@@ -44,6 +44,8 @@ import java.util.List;
  */
 public abstract class BaseDrawerActivity extends ActionBarActivity implements GetBaMap, AdapterView.OnItemClickListener {
 
+  private static final String TAG = BaseDrawerActivity.class.getName();
+
   ActionBarDrawerToggle mDrawerToggle;
   DrawerLayout mainDrawerLayout;
   ListView mainNavListView;
@@ -60,6 +62,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
    * @param resId - resource id
    */
   public void setContentView(int resId, ProcessAfterDrawer next) {
+    Log.d(TAG, "setContentView called");
     super.setContentView(resId);
     nextMethod = next;
     //String[] menu = new String[]{"Home", "Android", "Windows", "Linux", "Raspberry Pi", "WordPress", "Videos", "Contact Us"};
@@ -76,6 +79,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
 
   @Override
   public void processBaMap(List<BaGroups> list) {
+    Log.d(TAG, "processBaMap called");
     if (list == null) {
       list = new ArrayList<>();
     }
@@ -136,6 +140,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
+    Log.d(TAG, "onCreateOptionsMenu called");
     getMenuInflater().inflate(R.menu.menu_main, menu);
     SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
     SearchView searchView = (SearchView) menu.findItem(R.id.main_search).getActionView();
@@ -146,6 +151,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
+    Log.d(TAG, "onOptionsItemSelected called");
     if (mDrawerToggle.onOptionsItemSelected(item)) {
       return true;
     }
@@ -204,6 +210,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
   }
 
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    Log.d(TAG, "onItemCLick called");
     Intent intent = new Intent(this, MainActivity.class);
     intent.putExtra("group", position);
     startActivity(intent);

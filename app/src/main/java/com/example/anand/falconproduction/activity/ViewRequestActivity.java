@@ -28,11 +28,12 @@ import com.koushikdutta.ion.Ion;
  */
 public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAfterDrawer {
 
-  private static final String tag = "ViewRequestActivity";
+  private static final String tag = ViewRequestActivity.class.getName();
   long baId;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    Log.d(tag, "onCreate called");
     super.onCreate(savedInstanceState);
     setContentView(R.layout.view_request_activity, this);
   }
@@ -44,6 +45,7 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
    */
   @Override
   public void startActivity(Intent intent) {
+    Log.d(tag, "startActivity called");
     intent.putExtra("baId", baId);
     intent.putExtra("group", groupId);
     super.startActivity(intent);
@@ -51,6 +53,7 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
 
   @Override
   public void fillDetails(int groupCount) {
+    Log.d(tag, "fillDetails called");
     baId = intentBundle.getLong("baId");
     long actionId = intentBundle.getLong("actionId");
     final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -84,6 +87,7 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
   }
 
   private void buildUi(ActionModel actionModel, ProgressDialog progressDialog) {
+    Log.d(tag, "buildUi called");
     LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main_action_view_content);
     TextView mainActionTitle = (TextView) findViewById(R.id.main_action_view_title);
     mainActionTitle.setText(actionModel.getDisplayTitle());
