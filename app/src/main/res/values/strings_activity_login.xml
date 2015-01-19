@@ -5,5 +5,6 @@
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
+    <string name="change_client">Change Client</string>
 
 </resources>

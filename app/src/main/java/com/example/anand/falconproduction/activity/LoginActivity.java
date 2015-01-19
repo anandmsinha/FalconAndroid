@@ -35,6 +35,18 @@ public class LoginActivity extends Activity {
     mUserName = (EditText) findViewById(R.id.username);
     mPassword = (EditText) findViewById(R.id.password);
     Button mSubmitButton = (Button) findViewById(R.id.username_sign_in_button);
+    Button mChangeClientButton = (Button) findViewById(R.id.change_client_btn);
+
+    mChangeClientButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        SharedPreferences sharedPreferences = getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.commit();
+        startActivity(new Intent(LoginActivity.this, ActivityDecider.class));
+      }
+    });
 
     mSubmitButton.setOnClickListener(new View.OnClickListener() {
       @Override

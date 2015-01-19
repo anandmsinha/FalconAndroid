@@ -7,13 +7,16 @@
     3. ~~Show BaFeed corresponding to a Ba.~~
     4. ~~View a particular Request.~~
     5. ~~Open attachments. (Right now when a user clicks a link we open a browser window with the download link. From there browser handles how the file would be viewed.) This will be improved in version 0.3.~~
-    6. Add request.
+    6. ~~Add request.~~
     7. ~~Basic Search. Field highlighting has als been added.~~
-    8. Token based base-client identification.
+    8. ~~Token based base-client identification.~~
     9. ~~Load more in bafeed on scroll.~~
     10. ~~A logout button.~~
     11. Enter different client.
     12. Edit request.
+    13. Show no requests message in case of 0 requests.
+    14. ~~Fix title problem~~
+    15. Better interface for search
 
 2. Version 0.2.0 (Not started)
 
