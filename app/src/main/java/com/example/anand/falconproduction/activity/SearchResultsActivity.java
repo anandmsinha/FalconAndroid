@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class SearchResultsActivity extends Activity {
   private final static String TAG = SearchResultsActivity.class.getName();
 
   ListView mListView;
+  ProgressBar mProgressBar;
   Future<JsonObject> loading;
   ArrayAdapter<JsonObject> searchResultsAdapter;
   int totalResultsCount = 0;
@@ -51,6 +53,7 @@ public class SearchResultsActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.search_results);
     mListView = (ListView) findViewById(R.id.search_results_list);
+    mProgressBar = (ProgressBar) findViewById(R.id.search_progress_bar);
     Log.e("result", "called result");
     SharedPreferences prefs = getSharedPreferences(
         ApplicationConstants.appSharedPreference, Context.MODE_PRIVATE);
@@ -150,6 +153,7 @@ public class SearchResultsActivity extends Activity {
             } else {
               Toast.makeText(SearchResultsActivity.this, "No results found", Toast.LENGTH_LONG).show();
             }
+            mProgressBar.setVisibility(View.GONE);
           }
         });
   }

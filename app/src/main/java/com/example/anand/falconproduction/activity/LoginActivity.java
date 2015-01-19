@@ -43,7 +43,7 @@ public class LoginActivity extends Activity {
         SharedPreferences sharedPreferences = getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
         startActivity(new Intent(LoginActivity.this, ActivityDecider.class));
       }
     });
@@ -83,7 +83,7 @@ public class LoginActivity extends Activity {
                 SharedPreferences sharedPreferences = getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
                 SharedPreferences.Editor tokenEditor = sharedPreferences.edit();
                 tokenEditor.putString(ApplicationConstants.appAuthToken, result.get(ApplicationConstants.serverResponseToken).getAsString());
-                tokenEditor.commit(); // commit it instantly
+                tokenEditor.apply();
                 Toast.makeText(LoginActivity.this, "Authentication done", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(LoginActivity.this, ActivityDecider.class));
                 return;

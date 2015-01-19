@@ -12,11 +12,16 @@
     8. ~~Token based base-client identification.~~
     9. ~~Load more in bafeed on scroll.~~
     10. ~~A logout button.~~
-    11. Enter different client.
+    11. ~~Enter different client.~~
     12. Edit request.
     13. Show no requests message in case of 0 requests.
     14. ~~Fix title problem~~
     15. Better interface for search
+    16. Fetch clients based on database.
+    17. DateTime input
+    18. Remove file from selected files
+    19. Highlight results in search
+    20. Show loading while search is happening
 
 2. Version 0.2.0 (Not started)
 
