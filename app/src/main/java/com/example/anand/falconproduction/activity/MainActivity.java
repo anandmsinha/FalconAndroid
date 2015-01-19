@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -38,6 +39,7 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
   ArrayAdapter<BaFeed> feedsAdapter;
   long totalFeedsCount = 0;
   BaGroups feedBa;
+  ProgressBar mProgressBar;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,10 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
 
   @Override
   public void fillDetails(int groupsSize) {
-    Log.d(tag, "fillDetails called");
+    Log.d(tag, "fillDetails called - with group size " + groupsSize);
+    if (mProgressBar == null) {
+      mProgressBar = (ProgressBar) findViewById(R.id.feed_progress_bar);
+    }
     if (groupsSize != 0) {
       feedBa = mainAdapter.getItem(groupId);
       // initialize the adapter
@@ -111,6 +116,7 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
       });
       load(); // load the feeds
     } else {
+      mProgressBar.setVisibility(View.GONE);
       Toast.makeText(this, "Cannot fetch bafeed as ba menu has not been fetched", Toast.LENGTH_LONG).show();
     }
   }
@@ -163,6 +169,7 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
               }
             }
             Toast.makeText(MainActivity.this, "feeds loading finished", Toast.LENGTH_LONG).show();
+            mProgressBar.setVisibility(View.GONE);
           }
         });
   }

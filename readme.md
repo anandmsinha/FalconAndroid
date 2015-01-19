@@ -21,7 +21,8 @@
     17. DateTime input
     18. Remove file from selected files
     19. Highlight results in search
-    20. Show loading while search is happening
+    20. ~~Show loading while search is happening~~
+    21. ~~Loading while first time feed is loading.~~
 
 2. Version 0.2.0 (Not started)
 

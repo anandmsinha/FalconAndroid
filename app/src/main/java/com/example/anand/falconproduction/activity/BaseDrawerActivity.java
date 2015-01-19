@@ -191,7 +191,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
   @Override
   protected void onPostCreate(Bundle savedInstanceState) {
     super.onPostCreate(savedInstanceState);
-    mDrawerToggle.syncState();
+    //mDrawerToggle.syncState();
   }
 
   @Override

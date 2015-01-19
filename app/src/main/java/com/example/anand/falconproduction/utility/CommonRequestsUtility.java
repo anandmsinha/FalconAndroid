@@ -61,8 +61,9 @@ public class CommonRequestsUtility {
               next.processBaMap(groups);
             }
           });
+    } else {
+      next.processBaMap(baGroups);
     }
-    next.processBaMap(baGroups);
   }
 
   /**
