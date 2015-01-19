@@ -29,7 +29,7 @@ public class ClientDeciderActivity extends Activity {
       @Override
       public void onClick(View v) {
         String text = tokenText.getText().toString();
-        if (text.equals("anand") || text.equals("6081test") || text.equals("3081test")) {
+        if (text.matches("anand||6081test||3081test||JSPLtest||JPLtest")) {
           SharedPreferences sharedPreferences = getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
           SharedPreferences.Editor tokenEditor = sharedPreferences.edit();
           tokenEditor.putString(ApplicationConstants.clientToken, text);

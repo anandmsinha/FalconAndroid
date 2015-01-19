@@ -171,8 +171,10 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
         }
         return true;
       case R.id.action_logout:
-        getSharedPreferences(ApplicationConstants.appSharedPreference, 0)
-            .edit().remove(ApplicationConstants.appAuthToken).remove(ApplicationConstants.clientToken).commit();
+        SharedPreferences sharedPreferences = getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
+        SharedPreferences.Editor mainEditor = sharedPreferences.edit();
+        mainEditor.clear();
+        mainEditor.commit();
         startActivity(new Intent(this, ActivityDecider.class));
         return true;
       default:

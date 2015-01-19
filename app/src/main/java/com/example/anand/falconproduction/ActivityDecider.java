@@ -21,17 +21,32 @@ public class ActivityDecider extends Activity {
     Intent mainIntenet;
     if (sharedPreferences.contains(ApplicationConstants.clientToken)) {
       String token = sharedPreferences.getString(ApplicationConstants.clientToken, "token");
-      String url = "";
-      if (token.equals("anand")) {
-        url = "http://192.168.0.04:8080/falcon-dms/rest/api/";
-        ApplicationConstants.setClientId(1L);
-      } else if (token.equals("6081test")) {
-        url = "https://mytbits.com:6081/falcon-dms/rest/api/";
-        ApplicationConstants.setClientId(1L);
-      } else if (token.equals("3081test")) {
-        url = "https://mytbits.com:3081/falcon-dms/rest/api/";
-        ApplicationConstants.setClientId(1L);
+      String url;
+      switch (token) {
+        case "anand":
+          url = "http://192.168.0.05:8080/falcon-dms/rest/api/";
+          ApplicationConstants.setClientId(1L);
+          break;
+        case "6081test":
+          url = "https://mytbits.com:6081/falcon-dms/rest/api/";
+          ApplicationConstants.setClientId(1L);
+          break;
+        case "3081test":
+          url = "https://mytbits.com:3081/falcon-dms/rest/api/";
+          ApplicationConstants.setClientId(1L);
+          break;
+        case "JSPLtest":
+          url = "https://e-hub.in/falcon-dms/rest/api/";
+          ApplicationConstants.setClientId(1L);
+          break;
+        case "JPLtest":
+          url = "https://dms.jindalpower.com/falcon-dms/rest/api/";
+          ApplicationConstants.setClientId(1L);
+          break;
+        default:
+          url = "";
       }
+
       if (!url.equals("")) {
         ApplicationConstants.setBaseAppUrl(url);
         if (sharedPreferences.contains(ApplicationConstants.appAuthToken)) {
