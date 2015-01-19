@@ -88,6 +88,7 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
             convertView = getLayoutInflater().inflate(R.layout.feed_list_row, parent, false);
           }
           if (position >= getCount() - 2) {
+            // for the purpose of infinte scroll.
             load();
           }
           BaFeed currentFeed = getItem(position);

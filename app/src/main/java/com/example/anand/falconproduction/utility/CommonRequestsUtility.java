@@ -28,13 +28,20 @@ import java.util.Map;
  */
 public class CommonRequestsUtility {
 
-  private static final String tag = "commonrequest";
+  private static final String tag = CommonRequestsUtility.class.getName();
   private static List<BaGroups> baGroups;
   private static HashMap<Long, List<BaFeed>> baFeeds = new HashMap<Long, List<BaFeed>>();
   private static HashMap<Long, Long> baFeedsLimit = new HashMap<>();
   private static Future<JsonObject> loading;
 
+  /**
+   * This method takes a callback if bagroups are already fetched just return it else fetch it
+   * and return the callback once done.
+   * @param context - Activity
+   * @param next - Activity which implement GetBaMap interface.
+   */
   public static void getBaMap(final Context context, final GetBaMap next) {
+    Log.d(tag, "GetBaMap called");
     if (baGroups == null) {
       String url = ApplicationConstants.baseAppUrl
           + "bagroups/permissible"
@@ -47,17 +54,16 @@ public class CommonRequestsUtility {
           .setCallback(new FutureCallback<JsonObject>() {
             @Override
             public void onCompleted(Exception e, JsonObject result) {
+              List<BaGroups> groups = new ArrayList<>();
               if (e != null) {
                 Toast.makeText(context, "Error loading ba groups", Toast.LENGTH_LONG)
                     .show();
-                return;
+              } else {
+                for (Map.Entry<String, JsonElement> entry : result.entrySet()) {
+                  groups.add(new BaGroups(entry.getValue()));
+                }
+                setBaGroups(groups);
               }
-
-              List<BaGroups> groups = new ArrayList<BaGroups>();
-              for (Map.Entry<String, JsonElement> entry : result.entrySet()) {
-                groups.add(new BaGroups(entry.getValue()));
-              }
-              setBaGroups(groups);
               next.processBaMap(groups);
             }
           });
@@ -77,6 +83,7 @@ public class CommonRequestsUtility {
    * @param count - count of feeds needed.
    */
   public static void getBaFeed(final Context context, final GetBaFeed next, final long baId, int count) {
+    Log.d(tag, "Get ba feed called");
     // cancel the request if it is already going on.
     if (loading != null && !loading.isDone() && !loading.isCancelled())
       return;
@@ -108,28 +115,28 @@ public class CommonRequestsUtility {
           .setCallback(new FutureCallback<JsonObject>() {
             @Override
             public void onCompleted(Exception e, JsonObject result) {
+              List<BaFeed> output = new ArrayList<>();
               if (e != null) {
                 Log.e(tag, "Error loading ba feed for baid " + baId + " error - " + e.getMessage());
                 Toast.makeText(context, "Error loading ba feed", Toast.LENGTH_LONG)
                     .show();
-                return;
-              }
-
-              List<BaFeed> output = new ArrayList<BaFeed>();
-              JsonArray mainFeed = result.getAsJsonArray("baActions");
-              Long feedLimitCount = result.get("baActionsCount").getAsLong();
-              if (mainFeed != null) {
-                for (JsonElement jsonElement : mainFeed) {
-                  output.add(new BaFeed(baId, jsonElement));
+              } else {
+                JsonArray mainFeed = result.getAsJsonArray("baActions");
+                Long feedLimitCount = result.get("baActionsCount").getAsLong();
+                if (mainFeed != null) {
+                  for (JsonElement jsonElement : mainFeed) {
+                    output.add(new BaFeed(baId, jsonElement));
+                  }
+                  baFeeds.get(baId).addAll(output);
+                  baFeedsLimit.put(baId, feedLimitCount);
                 }
-                baFeeds.get(baId).addAll(output);
-                baFeedsLimit.put(baId, feedLimitCount);
               }
               next.processBaFeed(baId, output);
             }
           });
+    } else {
+      next.processBaFeed(baId, baFeeds.get(baId));
     }
-    next.processBaFeed(baId, baFeeds.get(baId));
   }
 
   private static void setBaGroups(List<BaGroups> baGroupes) {

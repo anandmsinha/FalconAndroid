@@ -69,7 +69,6 @@ public class SearchResultsActivity extends Activity {
       searchResultsAdapter = new ArrayAdapter<JsonObject>(this, 0) {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-          Log.d("search", "Get view called");
           if (convertView == null) {
             convertView = getLayoutInflater().inflate(R.layout.feed_list_row, parent, false);
           }
@@ -116,7 +115,7 @@ public class SearchResultsActivity extends Activity {
   private void load() {
     Log.d(TAG, "load method called");
     if (loading != null && !loading.isDone() && !loading.isCancelled()) {
-      Log.d("search", "loading cancelled");
+      Log.d(TAG, "loading cancelled");
       return;
     }
     String url = ApplicationConstants.baseAppUrl
@@ -140,8 +139,9 @@ public class SearchResultsActivity extends Activity {
           public void onCompleted(Exception e, JsonObject result) {
             Log.d("search", "search completed");
             if (e != null) {
-              Log.d("search", "some error has occured");
+              Log.d(TAG, "some error has occured");
               Toast.makeText(SearchResultsActivity.this, "Some error has occured", Toast.LENGTH_SHORT).show();
+              mProgressBar.setVisibility(View.GONE);
               return;
             }
             JsonArray mainResults = result.getAsJsonArray("baActions");
