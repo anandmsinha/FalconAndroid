@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import com.example.anand.falconproduction.R;
 import com.example.anand.falconproduction.utility.ApiUrlBuilder;
 import com.example.anand.falconproduction.utility.ApplicationConstants;
+import com.example.anand.falconproduction.utility.UiBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -40,24 +42,29 @@ public class SearchResultsActivity extends Activity {
 
   ListView mListView;
   ProgressBar mProgressBar;
+  LinearLayout mLinearLayout;
   Future<JsonObject> loading;
   ArrayAdapter<JsonObject> searchResultsAdapter;
   int totalResultsCount = 0;
   String query;
   long baId;
   String token;
+  // denotes if result has been fetched one time or not.
+  boolean firstFetch = false;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     Log.d(TAG, "onCreate called");
     super.onCreate(savedInstanceState);
     setContentView(R.layout.search_results);
+    mLinearLayout = (LinearLayout) findViewById(R.id.search_results_layout);
     mListView = (ListView) findViewById(R.id.search_results_list);
     mProgressBar = (ProgressBar) findViewById(R.id.search_progress_bar);
     Log.e("result", "called result");
     SharedPreferences prefs = getSharedPreferences(
         ApplicationConstants.appSharedPreference, Context.MODE_PRIVATE);
     token = prefs.getString(ApplicationConstants.appAuthToken, "token");
+    Ion.getDefault(this).configure().setLogging(TAG, Log.DEBUG);
     handleIntent(getIntent());
   }
 
@@ -115,7 +122,7 @@ public class SearchResultsActivity extends Activity {
   private void load() {
     Log.d(TAG, "load method called");
     if (loading != null && !loading.isDone() && !loading.isCancelled()) {
-      Log.d(TAG, "loading cancelled");
+      Log.d(TAG, "loading cancelled as request is already in process.");
       return;
     }
     String url = ApplicationConstants.baseAppUrl
@@ -129,7 +136,6 @@ public class SearchResultsActivity extends Activity {
       }
       url += "&skip=" + searchResultsAdapter.getCount();
     }
-    Ion.getDefault(this).configure().setLogging("search", Log.DEBUG);
     loading = Ion.with(this)
         .load(url)
         .setHeader("auth-token", token)
@@ -137,24 +143,41 @@ public class SearchResultsActivity extends Activity {
         .setCallback(new FutureCallback<JsonObject>() {
           @Override
           public void onCompleted(Exception e, JsonObject result) {
-            Log.d("search", "search completed");
+            Log.d(TAG, "search completed - first fetch status " + firstFetch);
             if (e != null) {
               Log.d(TAG, "some error has occured");
-              Toast.makeText(SearchResultsActivity.this, "Some error has occured", Toast.LENGTH_SHORT).show();
-              mProgressBar.setVisibility(View.GONE);
-              return;
-            }
-            JsonArray mainResults = result.getAsJsonArray("baActions");
-            if (mainResults != null) {
-              totalResultsCount = result.get("baActionsCount").getAsInt();
-              for (JsonElement jsonElement : mainResults) {
-                searchResultsAdapter.add(jsonElement.getAsJsonObject());
+              if (!firstFetch) {
+                showResultsMessage("Some error has occured");
               }
+              Toast.makeText(SearchResultsActivity.this, "Some error has occured", Toast.LENGTH_SHORT).show();
             } else {
-              Toast.makeText(SearchResultsActivity.this, "No results found", Toast.LENGTH_LONG).show();
+              JsonArray mainResults = result.getAsJsonArray("baActions");
+              if (mainResults != null) {
+                totalResultsCount = result.get("baActionsCount").getAsInt();
+                if (totalResultsCount == 0) {
+                  if (!firstFetch) {
+                    showResultsMessage("No search results found.");
+                  }
+                }
+                for (JsonElement jsonElement : mainResults) {
+                  searchResultsAdapter.add(jsonElement.getAsJsonObject());
+                }
+              } else {
+                if (!firstFetch) {
+                  showResultsMessage("No search results found.");
+                }
+                Toast.makeText(SearchResultsActivity.this, "No results found", Toast.LENGTH_LONG).show();
+              }
             }
+            firstFetch = true;
             mProgressBar.setVisibility(View.GONE);
           }
         });
+  }
+
+  private void showResultsMessage(String message) {
+    Log.d(TAG, "show result message called");
+    TextView tmpTextView = UiBuilder.createBoldTextView(this, message);
+    mLinearLayout.addView(tmpTextView);
   }
 }
