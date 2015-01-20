@@ -32,7 +32,7 @@ public class ActionModel {
     this.actionId = jsonObject.get("actionId").getAsLong();
     this.actionUpdateCaption = jsonObject.get("actionUpdateCaption").getAsString();
     this.displayTitle = jsonObject.get("mainTitle").getAsString();
-    this.permissibleActionIds = new ArrayList<Long>();
+    this.permissibleActionIds = new ArrayList<>();
     JsonArray permissionsArray = jsonObject.getAsJsonArray("permissibleActionIds");
     if (permissionsArray != null && permissionsArray.size() > 0) {
       for (JsonElement actionId : permissionsArray) {
@@ -40,7 +40,7 @@ public class ActionModel {
       }
     }
     JsonArray displayGroups = jsonObject.getAsJsonArray("actionDisplayGroups");
-    this.displayGroups = new ArrayList<DisplayGroup>();
+    this.displayGroups = new ArrayList<>();
     if (displayGroups != null && displayGroups.size() > 0) {
       for (JsonElement displayGroup : displayGroups) {
         this.displayGroups.add(new DisplayGroup(displayGroup));

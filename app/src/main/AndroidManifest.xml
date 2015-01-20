@@ -44,6 +44,8 @@
         </activity>
         <activity android:name=".activity.utility.MultipleFilesSelectionActivity">
         </activity>
+        <activity android:name=".activity.EditActionActivity">
+        </activity>
         <activity
             android:name=".activity.SearchResultsActivity"
             android:launchMode="singleTop">

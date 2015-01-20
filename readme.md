@@ -17,12 +17,13 @@
     13. ~~Show no requests message in case of 0 requests.~~
     14. ~~Fix title problem~~
     15. Better interface for search
-    16. Fetch clients based on database.
-    17. DateTime input
+    16. ~~Fetch clients based on database.~~ - Depreceted
+    17. ~~DateTime input~~
     18. Remove file from selected files
     19. Highlight results in search
     20. ~~Show loading while search is happening~~
     21. ~~Loading while first time feed is loading.~~
+    22. In case of no internet connection show no connection message.
 
 2. Version 0.2.0 (Not started)
 
@@ -36,6 +37,6 @@
 3. Version 0.3.0 (Not started)
 
     1. Check if we can support lower android versions.
-    2. Improve look and feel. 
-    3. Improve file viewer use intent instead of browser.
+    2. Improve look and feel.
     4. Ability to see drafts.
+    5. Ability to view files in place (right now it happens in browser.)

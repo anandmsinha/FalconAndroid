@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
@@ -214,6 +215,7 @@ public class FieldAdvanced {
         mDateTimeDialogView.findViewById(R.id.SetDateTime).setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Log.d("fAdvanced", "value recieved - " + mDateTimePicker.get());
             mDateTimePicker.clearFocus();
             dateInputText.setText(simpleDateFormat.format(mDateTimePicker.get().getTime()));
             dateTimeDialog.dismiss();

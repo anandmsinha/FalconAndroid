@@ -3,6 +3,7 @@ package com.example.anand.falconproduction.fragments;
 import java.util.Calendar;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
@@ -15,7 +16,7 @@ import android.widget.TimePicker.OnTimeChangedListener;
 
 import com.example.anand.falconproduction.R;
 
-public class DateTimePicker extends RelativeLayout implements View.OnClickListener, OnDateChangedListener, OnTimeChangedListener {
+public class DateTimePicker extends RelativeLayout implements View.OnClickListener {
 
   // DatePicker reference
   private DatePicker              datePicker;
@@ -37,28 +38,40 @@ public class DateTimePicker extends RelativeLayout implements View.OnClickListen
 
   public DateTimePicker(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
-
+    Log.d("dateTimePicker", "DateTimePicker called");
     // Get LayoutInflater instance
     final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    // Inflate myself
+
     inflater.inflate(R.layout.datetimepicker, this, true);
 
-    // Inflate the date and time picker views
     final LinearLayout datePickerView = (LinearLayout) inflater.inflate(R.layout.datepicker, null);
     final LinearLayout timePickerView = (LinearLayout) inflater.inflate(R.layout.timepicker, null);
 
     // Grab a Calendar instance
     mCalendar = Calendar.getInstance();
-    // Grab the ViewSwitcher so we can attach our picker views to it
+
     viewSwitcher = (ViewSwitcher) this.findViewById(R.id.DateTimePickerVS);
 
     // Init date picker
     datePicker = (DatePicker) datePickerView.findViewById(R.id.DatePicker);
-    datePicker.init(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), this);
+    datePicker.init(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), new OnDateChangedListener() {
+      @Override
+      public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        Log.d("dTimePick", "Date changed triggred " + dayOfMonth);
+        mCalendar.set(year, monthOfYear, dayOfMonth, mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE));
+      }
+    });
+
 
     // Init time picker
     timePicker = (TimePicker) timePickerView.findViewById(R.id.TimePicker);
-    timePicker.setOnTimeChangedListener(this);
+    timePicker.setOnTimeChangedListener(new OnTimeChangedListener() {
+      @Override
+      public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+        Log.d("dTimePick", "Time changed triggred " + hourOfDay);
+        mCalendar.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
+      }
+    });
 
     // Handle button clicks
     (findViewById(R.id.SwitchToTime)).setOnClickListener(this); // shows the time picker
@@ -69,18 +82,6 @@ public class DateTimePicker extends RelativeLayout implements View.OnClickListen
     viewSwitcher.addView(timePickerView, 1);
   }
   // Constructor end
-
-  // Called every time the user changes DatePicker values
-  public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-    // Update the internal Calendar instance
-    mCalendar.set(year, monthOfYear, dayOfMonth, mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE));
-  }
-
-  // Called every time the user changes TimePicker values
-  public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-    // Update the internal Calendar instance
-    mCalendar.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
-  }
 
   // Handle button clicks
   public void onClick(View v) {
@@ -105,6 +106,7 @@ public class DateTimePicker extends RelativeLayout implements View.OnClickListen
   }
 
   public Calendar get() {
+    mCalendar.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour(), timePicker.getCurrentMinute());
     return mCalendar;
   }
 
