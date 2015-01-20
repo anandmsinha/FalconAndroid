@@ -14,7 +14,7 @@
     10. ~~A logout button.~~
     11. ~~Enter different client.~~
     12. Edit request.
-    13. Show no requests message in case of 0 requests.
+    13. ~~Show no requests message in case of 0 requests.~~
     14. ~~Fix title problem~~
     15. Better interface for search
     16. Fetch clients based on database.

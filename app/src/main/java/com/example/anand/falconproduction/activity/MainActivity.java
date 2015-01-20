@@ -180,21 +180,4 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
     return feedBa.getBaId();
   }
 
-  /*@Override
-  public void processBaFeed(long baId, List<BaFeed> feeds) {
-    falconRequestListAdapter = new FalconRequestListAdapter(this, baId, getLayoutInflater(), feeds);
-    ListView listView = (ListView) findViewById(R.id.main_list_content);
-    listView.setAdapter(falconRequestListAdapter);
-    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        BaFeed baFeed = falconRequestListAdapter.getItem(position);
-        Intent intent = new Intent(getApplicationContext(), ViewRequestActivity.class);
-        intent.putExtra("baId", baFeed.getBaId());
-        intent.putExtra("actionId", baFeed.getRequestId());
-        startActivity(intent);
-      }
-    });
-  }*/
-
 }

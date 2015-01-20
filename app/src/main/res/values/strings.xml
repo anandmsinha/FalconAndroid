@@ -22,4 +22,8 @@
     <string name="token">Enter Token</string>
     <string name="submit">Submit</string>
 
+    <string name="choose_date">Set date</string>
+    <string name="choose_time">Set time</string>
+    <string name="reset">Reset</string>
+
 </resources>

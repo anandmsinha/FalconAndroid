@@ -49,7 +49,7 @@ public class SearchResultsActivity extends Activity {
   String query;
   long baId;
   String token;
-  // denotes if result has been fetched one time or not.
+  // denotes if result has been fetched one time or not. show no results found message based on that
   boolean firstFetch = false;
 
   @Override
@@ -68,6 +68,10 @@ public class SearchResultsActivity extends Activity {
     handleIntent(getIntent());
   }
 
+  /**
+   * Recieve and process the intent.
+   * @param intent - search intent
+   */
   private void handleIntent(Intent intent) {
     Log.d(TAG, "handleIntent called");
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -145,7 +149,7 @@ public class SearchResultsActivity extends Activity {
           public void onCompleted(Exception e, JsonObject result) {
             Log.d(TAG, "search completed - first fetch status " + firstFetch);
             if (e != null) {
-              Log.d(TAG, "some error has occured");
+              Log.d(TAG, "some error has occured " + e.getMessage());
               if (!firstFetch) {
                 showResultsMessage("Some error has occured");
               }

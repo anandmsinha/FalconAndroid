@@ -2,18 +2,23 @@ package com.example.anand.falconproduction.models.create;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.text.InputType;
 import android.view.View;
+import android.view.Window;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.anand.falconproduction.R;
 import com.example.anand.falconproduction.activity.utility.MultipleFilesSelectionActivity;
 import com.example.anand.falconproduction.adapters.UserAutoCompleteAdapter;
+import com.example.anand.falconproduction.fragments.DateTimePicker;
 import com.example.anand.falconproduction.utility.UiBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -193,26 +198,50 @@ public class FieldAdvanced {
         });
         formComponent = dateInputText;
       } else if (actualType.equals("DateTimeData")) {
-        // Right now in dat time also we only take date.
-        // Todo - add way to input time also.
+        /**
+         * A custom component has been created to handle date time input.
+         */
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d-MMM-yyyy,HH:mm:ss aaa");
         final EditText dateInputText = UiBuilder.createEditText(activity);
         dateInputText.setInputType(InputType.TYPE_NULL);
-        Calendar newCalender = Calendar.getInstance();
-        final DatePickerDialog pickDateDialog = new DatePickerDialog(activity, new DatePickerDialog.OnDateSetListener() {
+
+        final Dialog dateTimeDialog = new Dialog(activity);
+        final RelativeLayout mDateTimeDialogView =
+            (RelativeLayout) activity.getLayoutInflater().inflate(R.layout.date_time_dialog, null);
+        final DateTimePicker mDateTimePicker =
+            (DateTimePicker) mDateTimeDialogView.findViewById(R.id.DateTimePicker);
+
+        mDateTimeDialogView.findViewById(R.id.SetDateTime).setOnClickListener(new View.OnClickListener() {
           @Override
-          public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            Calendar newDate = Calendar.getInstance();
-            newDate.set(year, monthOfYear, dayOfMonth);
-            dateInputText.setText(simpleDateFormat.format(newDate.getTime()));
+          public void onClick(View v) {
+            mDateTimePicker.clearFocus();
+            dateInputText.setText(simpleDateFormat.format(mDateTimePicker.get().getTime()));
+            dateTimeDialog.dismiss();
           }
-        }, newCalender.get(Calendar.YEAR), newCalender.get(Calendar.MONTH), newCalender.get(Calendar.DAY_OF_MONTH));
+        });
+
+        mDateTimeDialogView.findViewById(R.id.CancelDialog).setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            dateTimeDialog.cancel();
+          }
+        });
+
+        mDateTimeDialogView.findViewById(R.id.ResetDateTime).setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            mDateTimePicker.reset();
+          }
+        });
+        dateTimeDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dateTimeDialog.setContentView(mDateTimeDialogView);
         dateInputText.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            pickDateDialog.show();
+            dateTimeDialog.show();
           }
         });
+
         formComponent = dateInputText;
       } else {
         formComponent = UiBuilder.createEditText(activity);

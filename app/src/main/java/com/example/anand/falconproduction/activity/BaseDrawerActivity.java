@@ -180,18 +180,12 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
         SharedPreferences sharedPreferences = getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
         SharedPreferences.Editor mainEditor = sharedPreferences.edit();
         mainEditor.clear();
-        mainEditor.commit();
+        mainEditor.apply();
         startActivity(new Intent(this, ActivityDecider.class));
         return true;
       default:
         return super.onOptionsItemSelected(item);
     }
-  }
-
-  @Override
-  protected void onPostCreate(Bundle savedInstanceState) {
-    super.onPostCreate(savedInstanceState);
-    //mDrawerToggle.syncState();
   }
 
   @Override

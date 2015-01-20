@@ -24,7 +24,7 @@ public class ActivityDecider extends Activity {
       String url;
       switch (token) {
         case "anand":
-          url = "http://192.168.0.05:8080/falcon-dms/rest/api/";
+          url = "http://192.168.0.04:8080/falcon-dms/rest/api/";
           ApplicationConstants.setClientId(1L);
           break;
         case "6081test":
