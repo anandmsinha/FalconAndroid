@@ -179,7 +179,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
       }
       builder.setMessage(stringBuilder.toString())
           .setCancelable(false)
-          .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+          .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -256,11 +256,11 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
     protected void onPostExecute(Boolean status) {
       if (status) {
         mProgressDialog.dismiss();
-        Toast.makeText(CreateRequestActivity.this, "Request created", Toast.LENGTH_LONG).show();
+        Toast.makeText(CreateRequestActivity.this, getResources().getString(R.string.request_succ), Toast.LENGTH_LONG).show();
         Intent mainIntent = new Intent(CreateRequestActivity.this, MainActivity.class);
         startActivity(mainIntent);
         return;
-      } Toast.makeText(CreateRequestActivity.this, "Request creation failed.", Toast.LENGTH_LONG).show();
+      } Toast.makeText(CreateRequestActivity.this, getResources().getString(R.string.request_fail), Toast.LENGTH_LONG).show();
     }
 
     private boolean handleFormSubmission() {
@@ -289,7 +289,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
                 String uuid = uploadFile(fieldAdvanced.getFiles().get(0));
                 if (uuid.equals("failed")) {
                   outerbreak = true;
-                  publishProgress("File upload failed");
+                  publishProgress(getResources().getString(R.string.file_fail));
                   break;
                 }
                 fieldAdvanced.setFieldValue(uuid);
@@ -367,7 +367,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
       try {
         // We are blocking the ui beacause until file is uploaded we can't get uuid
         // which is needed to submit form.
-        publishProgress("Uploading file " + file.getName());
+        publishProgress(getResources().getString(R.string.file_uploading) + file.getName());
         JsonObject jsonObject = Ion
             .with(CreateRequestActivity.this)
             .load(ApiUrlBuilder.uploadFile(baId))
@@ -377,7 +377,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
             .asJsonObject()
             .get();
         if (jsonObject.has("uuid")) {
-          publishProgress("File upload successful.");
+          publishProgress(getResources().getString(R.string.file_succ));
           return jsonObject.get("uuid").getAsString();
         }
       } catch (Exception e) {

@@ -1,8 +1,10 @@
 package com.example.anand.falconproduction.models.create;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.InputType;
 import android.util.Log;
@@ -29,6 +31,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -153,7 +156,7 @@ public class FieldAdvanced {
         // Not using regex (matches method) above as it is a costly operation and most of the actualTypes will matches StringData in rare case they will try to match beyong that.
         formComponent = UiBuilder.createEditText(activity);
       } else if (actualType.equals("FileDataList") || actualType.equals("FileData")) {
-        Button mainUploadButton = UiBuilder.createButton(activity, "Select file");
+        Button mainUploadButton = UiBuilder.createButton(activity, activity.getResources().getString(R.string.select_file));
         mainUploadButton.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -164,6 +167,52 @@ public class FieldAdvanced {
         formComponent = mainUploadButton;
         // Create a list view
         filesNameTextView = UiBuilder.getTextView(activity, "");
+        filesNameTextView.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            // for removing files
+            if (!files.isEmpty()) {
+              String [] fileNames = new String[files.size()];
+              boolean [] filesChecked = new boolean[files.size()];
+              final ArrayList<File> finalList = new ArrayList<>(files);
+              for (int i = 0, _l = files.size(); i < _l; ++i)  {
+                fileNames[i] = files.get(i).getAbsolutePath();
+                filesChecked[i] = true;
+              }
+              AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+              builder.setTitle(activity.getResources().getString(R.string.uncheck_files));
+              builder.setMultiChoiceItems(fileNames, filesChecked, new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                  if (isChecked && finalList.get(which) == null) {
+                    finalList.set(which, files.get(which));
+                  } else if (!isChecked) {
+                    finalList.set(which, null);
+                  }
+                }
+              }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                  finalList.removeAll(Collections.singleton(null));
+                  files = finalList;
+                  StringBuilder finalNameToBeSet = new StringBuilder();
+                  for (File file : files) {
+                    finalNameToBeSet.append(file.getAbsolutePath());
+                    finalNameToBeSet.append(", ");
+                  }
+                  filesNameTextView.setText(finalNameToBeSet.toString());
+                }
+              }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+              });
+              AlertDialog finalFileDialog = builder.create();
+              finalFileDialog.show();
+            }
+          }
+        });
         // for removing files use - http://developer.android.com/guide/topics/ui/dialogs.html (Pick a color example)
       } else if (actualType.equals("BooleanData")) {
         formComponent = UiBuilder.createCheckbox(activity);
