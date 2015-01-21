@@ -82,7 +82,9 @@ public class LoginActivity extends Activity {
               if (result.has(ApplicationConstants.serverResponseToken)) {
                 SharedPreferences sharedPreferences = getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
                 SharedPreferences.Editor tokenEditor = sharedPreferences.edit();
-                tokenEditor.putString(ApplicationConstants.appAuthToken, result.get(ApplicationConstants.serverResponseToken).getAsString());
+                String token = result.get(ApplicationConstants.serverResponseToken).getAsString();
+                Log.d(TAG, "Token - " + token);
+                tokenEditor.putString(ApplicationConstants.appAuthToken, token);
                 tokenEditor.apply();
                 Toast.makeText(LoginActivity.this, "Authentication done", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(LoginActivity.this, ActivityDecider.class));

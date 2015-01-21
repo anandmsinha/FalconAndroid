@@ -278,7 +278,11 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
             View formComponent = fieldAdvanced.getFormComponent();
             if (fieldAdvanced.isFieldHasOptions()) {
               if (formComponent instanceof Spinner) {
-                fieldAdvanced.setFieldValue(((Spinner) formComponent).getSelectedItem().toString());
+                String key = ((Spinner) formComponent).getSelectedItem().toString();
+                String value = fieldAdvanced.getFieldOptionsMap().get(key);
+                if (value != null) {
+                  fieldAdvanced.setFieldValue(value);
+                }
               }
             } else if (actualType.equals("BooleanData")) {
               if (formComponent instanceof CheckBox) {

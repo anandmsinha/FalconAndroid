@@ -19,11 +19,14 @@
     15. Better interface for search
     16. ~~Fetch clients based on database.~~ - Depreceted
     17. ~~DateTime input~~
-    18. Remove file from selected files
+    18. ~~Remove file from selected files~~
     19. Highlight results in search
     20. ~~Show loading while search is happening~~
     21. ~~Loading while first time feed is loading.~~
     22. In case of no internet connection show no connection message.
+    23. Fix bug in create request api.
+    24. Single user autocomplete limit to 1.
+    24. Better request viewer.
 
 2. Version 0.2.0 (Not started)
 

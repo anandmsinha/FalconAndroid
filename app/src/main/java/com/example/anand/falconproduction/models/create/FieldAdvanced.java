@@ -59,7 +59,7 @@ public class FieldAdvanced {
   private List<String> fieldValues = new ArrayList<>();
   // The following 5 properties are limited to filelist data type
   private transient View formComponent;
-  private transient HashMap<String, Long> fieldOptionsMap;
+  private transient HashMap<String, String> fieldOptionsMap;
   private transient ArrayList<File> files = new ArrayList<>();
   private transient TextView filesNameTextView;
 
@@ -123,11 +123,11 @@ public class FieldAdvanced {
     this.files = files;
   }
 
-  public HashMap<String, Long> getFieldOptionsMap() {
+  public HashMap<String, String> getFieldOptionsMap() {
     return fieldOptionsMap;
   }
 
-  public void setFieldOptionsMap(HashMap<String, Long> fieldOptionsMap) {
+  public void setFieldOptionsMap(HashMap<String, String> fieldOptionsMap) {
     this.fieldOptionsMap = fieldOptionsMap;
   }
 
@@ -149,7 +149,7 @@ public class FieldAdvanced {
       if (fieldHasOptions) {
         fieldOptionsMap = new HashMap<>();
         for (FieldOption fieldOption : fieldOptions) {
-          fieldOptionsMap.put(fieldOption.getDisplayName(), fieldOption.getId());
+          fieldOptionsMap.put(fieldOption.getDisplayName(), fieldOption.getName());
         }
         formComponent = UiBuilder.createSpinner(activity, fieldOptionsMap.keySet());
       } else if (actualType.equals("StringData") || actualType.equals("IntegerData") || actualType.equals("RealData")) {

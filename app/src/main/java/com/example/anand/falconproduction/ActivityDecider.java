@@ -49,6 +49,7 @@ public class ActivityDecider extends Activity {
 
       if (!url.equals("")) {
         ApplicationConstants.setBaseAppUrl(url);
+
         if (sharedPreferences.contains(ApplicationConstants.appAuthToken)) {
           mainIntenet = new Intent(this, MainActivity.class);
         } else {
