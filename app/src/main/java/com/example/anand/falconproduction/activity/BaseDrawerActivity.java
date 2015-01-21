@@ -73,7 +73,6 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
     SharedPreferences preferences = getSharedPreferences(ApplicationConstants.appSharedPreference,
         MODE_PRIVATE);
     authToken = preferences.getString(ApplicationConstants.appAuthToken, "token");
-    Log.d(TAG, "Token - " + authToken);
     CommonRequestsUtility.getBaMap(this, this);
   }
 

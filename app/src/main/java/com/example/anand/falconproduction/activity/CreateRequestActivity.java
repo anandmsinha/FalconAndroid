@@ -197,37 +197,6 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
   }
 
   /**
-   * This function submits the form in background thread.
-   *
-   * @param progressDialog - progress dialog
-   */
- /* private void handleSubmission(ProgressDialog progressDialog) {
-    FormSubmit formSubmit = new FormSubmit(requestForm, this, authToken, baId);
-    FutureTask<Boolean> submissionData = new FutureTask<>(formSubmit);
-    submissionData.run();
-    // wait for task to complete.
-    while (true) {
-      try {
-        Boolean data = submissionData.get(100L, TimeUnit.MILLISECONDS);
-        if (data != null) {
-          progressDialog.dismiss();
-          if (data) {
-            Toast.makeText(this, "Success !!!", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, MainActivity.class));
-          } else {
-            Toast.makeText(this, "Form submission failed.", Toast.LENGTH_LONG).show();
-          }
-          break;
-        }
-      } catch (Exception e) {
-        progressDialog.dismiss();
-        Toast.makeText(this, "Form submission failed.", Toast.LENGTH_LONG).show();
-        break;
-      }
-    }
-  }*/
-
-  /**
    * Right now we are using asynctask later on we need to find better solution
    * to this as file upload and process can be really long. Using Async Task here
    * is not totally incorrect as The main problem with long running process in AsyncTask
@@ -237,6 +206,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
   class SubmitRequestForm extends AsyncTask<RequestForm, String, Boolean> {
 
     RequestForm mainForm;
+    long requestId;
 
     protected void onPreExecute() {
       super.onPreExecute();
@@ -245,6 +215,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
 
     protected Boolean doInBackground(RequestForm... requestForms) {
       mainForm = requestForms[0];
+      requestId = 0;
       return handleFormSubmission();
     }
 
@@ -257,10 +228,20 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
       if (status) {
         mProgressDialog.dismiss();
         Toast.makeText(CreateRequestActivity.this, getResources().getString(R.string.request_succ), Toast.LENGTH_LONG).show();
-        Intent mainIntent = new Intent(CreateRequestActivity.this, MainActivity.class);
-        startActivity(mainIntent);
-        return;
-      } Toast.makeText(CreateRequestActivity.this, getResources().getString(R.string.request_fail), Toast.LENGTH_LONG).show();
+        Intent mainIntent;
+        if (requestId == 0) {
+          mainIntent = new Intent(CreateRequestActivity.this, MainActivity.class);
+          startActivity(mainIntent);
+        } else {
+          mainIntent = new Intent(CreateRequestActivity.this, ViewRequestActivity.class);
+          mainIntent.putExtra("actionId", requestId);
+          startActivity(mainIntent);
+          // To remove current activity from stack.
+          finish();
+        }
+      } else {
+        Toast.makeText(CreateRequestActivity.this, getResources().getString(R.string.request_fail), Toast.LENGTH_LONG).show();
+      }
     }
 
     private boolean handleFormSubmission() {
@@ -356,6 +337,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
           publishProgress(jsonObject.get("message").toString());
           if (jsonObject.has("message")) {
             if (jsonObject.get("message").getAsString().equals("Request created")) {
+              requestId = jsonObject.get("requestId").getAsLong();
               return true;
             }
           }
