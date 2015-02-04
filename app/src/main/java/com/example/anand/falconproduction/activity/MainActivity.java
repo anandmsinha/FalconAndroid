@@ -111,7 +111,7 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
           BaFeed baFeed = feedsAdapter.getItem(position);
           Intent requestViewIntent = new Intent(MainActivity.this, ViewRequestActivity.class);
           requestViewIntent.putExtra("baId", baFeed.getBaId());
-          requestViewIntent.putExtra("actionId", baFeed.getRequestId());
+          requestViewIntent.putExtra("actionId", baFeed.getActionId());
           startActivity(requestViewIntent);
         }
       });

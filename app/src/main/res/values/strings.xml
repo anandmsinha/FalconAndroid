@@ -36,4 +36,10 @@
     <string name="file_succ">File upload successful.</string>
     <string name="file_uploading">Uploading file </string>
 
+    <string name="update">Update</string>
+    <string name="back">Back</string>
+
+    <string name="permission_view">You don\'t have permission to view this action.</string>
+    <string name="fetch_error">Error in fetching action.</string>
+
 </resources>

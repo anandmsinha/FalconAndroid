@@ -27,6 +27,7 @@
     23. Fix bug in create request api.
     24. Single user autocomplete limit to 1.
     24. Better request viewer.
+    25. Switch to default ba set in settings on first load.
 
 2. Version 0.2.0 (Not started)
 

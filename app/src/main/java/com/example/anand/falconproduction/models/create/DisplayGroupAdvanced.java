@@ -19,13 +19,17 @@ public class DisplayGroupAdvanced {
   private HashMap<Long, FieldAdvanced> fieldsMap;
 
   public DisplayGroupAdvanced(JsonElement jsonElement) {
+    this(jsonElement, false);
+  }
+
+  public DisplayGroupAdvanced(JsonElement jsonElement, boolean isEdit) {
     JsonObject jsonObject = jsonElement.getAsJsonObject();
     actionDisplayGroupTitle = jsonObject.get("actionDisplayGroupTitle").getAsString();
     JsonArray jsonArray = jsonObject.get("fields").getAsJsonArray();
     fieldsMap = new HashMap<>();
     if (jsonArray != null) {
       for (JsonElement field : jsonArray) {
-        FieldAdvanced fieldAdvanced = new FieldAdvanced(field);
+        FieldAdvanced fieldAdvanced = new FieldAdvanced(field, isEdit);
         fieldsMap.put(fieldAdvanced.getFieldId(), fieldAdvanced);
       }
     }

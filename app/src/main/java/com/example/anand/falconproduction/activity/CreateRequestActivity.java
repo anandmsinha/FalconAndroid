@@ -22,6 +22,7 @@ import com.example.anand.falconproduction.models.create.DisplayGroupAdvanced;
 import com.example.anand.falconproduction.models.create.FieldAdvanced;
 import com.example.anand.falconproduction.models.create.RequestForm;
 import com.example.anand.falconproduction.utility.ApiUrlBuilder;
+import com.example.anand.falconproduction.utility.FormSubmissionUtility;
 import com.example.anand.falconproduction.utility.FormValidator;
 import com.example.anand.falconproduction.utility.LayoutBuilder;
 import com.example.anand.falconproduction.utility.UiBuilder;
@@ -108,21 +109,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
     Log.d(TAG, "onActivityResult called");
     if (requestCode > 0 && resultCode == RESULT_OK) {
       ArrayList<File> files = (ArrayList<File>) data.getSerializableExtra("upload");
-      if (files != null && !files.isEmpty()) {
-        for (DisplayGroupAdvanced displayGroupAdvanced : requestForm.getDisplayGroupsAdvanced()) {
-          if (displayGroupAdvanced.getFieldsMap().containsKey((long) requestCode)) {
-            FieldAdvanced tmpFieldAdvanced = displayGroupAdvanced.getFieldsMap().get((long) requestCode);
-            // Todo - Handle case for same file selected twice.
-            tmpFieldAdvanced.getFiles().addAll(files);
-            Log.d(TAG, "Size of files recieved " + files.size());
-            String existingFiles = tmpFieldAdvanced.getFilesNameTextView().getText().toString();
-            for (File file : files) {
-              existingFiles += file.getAbsolutePath() + ", ";
-            }
-            tmpFieldAdvanced.getFilesNameTextView().setText(existingFiles);
-          }
-        }
-      }
+      UiBuilder.addFilesToList((long) requestCode, files, requestForm);
     }
   }
 
@@ -130,28 +117,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
     Log.d(TAG, "buildUi called");
     LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main_request_create_content);
     if (requestForm != null) {
-      for (DisplayGroupAdvanced displayGroupAdvanced : requestForm.getDisplayGroupsAdvanced()) {
-        LinearLayout displayGroupBlock = LayoutBuilder.getStandardFalconLayout(this);
-        TextView dispHeading = UiBuilder.createBoldTextView(this, displayGroupAdvanced.getActionDisplayGroupTitle());
-        displayGroupBlock.addView(dispHeading);
-
-        for (Map.Entry<Long, FieldAdvanced> entry : displayGroupAdvanced.getFieldsMap().entrySet()) {
-          View formView = entry.getValue().getUiComponent(this);
-          if (formView != null) {
-            displayGroupBlock.addView(UiBuilder.createBoldTextView(this, entry.getValue().getFieldDisplayName()));
-            if (entry.getValue().getFieldUiComponentType() == 8) {
-              displayGroupBlock.addView(entry.getValue().getFilesNameTextView());
-            }
-            displayGroupBlock.addView(formView);
-          }
-        }
-        mainLayout.addView(displayGroupBlock);
-      }
-      LinearLayout processResults = LayoutBuilder.getStandardFalconLayout(this);
-      Button submitFormButton = UiBuilder.createButton(this, "Submit");
-      submitFormButton.setOnClickListener(this);
-      processResults.addView(submitFormButton);
-      mainLayout.addView(processResults);
+      UiBuilder.buildFormUi(this, mainLayout, requestForm, this);
     }
     progressDialog.dismiss();
   }
@@ -164,12 +130,8 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
     FormValidator formValidator = requestForm.isValid();
     if (formValidator.getErrorMessages().isEmpty()) {
       if (!formValidator.isTextError()) {
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setTitle("Submission in progress");
-        mProgressDialog.setMessage("Preparing form");
-        mProgressDialog.setIndeterminate(false);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        new SubmitRequestForm().execute(requestForm);
+        mProgressDialog = UiBuilder.createProgressDialog(this, "Submission in progress", "Preparing form");
+        new FormSubmissionUtility(this, mProgressDialog, requestForm, false, baId, authToken, 0, groupId);
       }
     } else {
       AlertDialog.Builder builder = new AlertDialog.Builder(CreateRequestActivity.this);
@@ -196,181 +158,4 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
     return baId;
   }
 
-  /**
-   * Right now we are using asynctask later on we need to find better solution
-   * to this as file upload and process can be really long. Using Async Task here
-   * is not totally incorrect as The main problem with long running process in AsyncTask
-   * is memory leak due t change of activty but we are blocking our activity son chances
-   * of memory leak should not be there.
-   */
-  class SubmitRequestForm extends AsyncTask<RequestForm, String, Boolean> {
-
-    RequestForm mainForm;
-    long requestId;
-
-    protected void onPreExecute() {
-      super.onPreExecute();
-      mProgressDialog.show();
-    }
-
-    protected Boolean doInBackground(RequestForm... requestForms) {
-      mainForm = requestForms[0];
-      requestId = 0;
-      return handleFormSubmission();
-    }
-
-    protected void onProgressUpdate(String... messages) {
-      mProgressDialog.setMessage(messages[0]);
-    }
-
-    @Override
-    protected void onPostExecute(Boolean status) {
-      if (status) {
-        mProgressDialog.dismiss();
-        Toast.makeText(CreateRequestActivity.this, getResources().getString(R.string.request_succ), Toast.LENGTH_LONG).show();
-        Intent mainIntent;
-        if (requestId == 0) {
-          mainIntent = new Intent(CreateRequestActivity.this, MainActivity.class);
-          startActivity(mainIntent);
-        } else {
-          mainIntent = new Intent(CreateRequestActivity.this, ViewRequestActivity.class);
-          mainIntent.putExtra("actionId", requestId);
-          startActivity(mainIntent);
-          // To remove current activity from stack.
-          finish();
-        }
-      } else {
-        Toast.makeText(CreateRequestActivity.this, getResources().getString(R.string.request_fail), Toast.LENGTH_LONG).show();
-      }
-    }
-
-    private boolean handleFormSubmission() {
-      // Fill data in request form.
-      boolean outerbreak = false; // outerbreak is variable which is used to track file upload failure. In case of file upload fail we cancel form submission.
-      for (DisplayGroupAdvanced displayGroupAdvanced : mainForm.getDisplayGroupsAdvanced()) {
-        for (Map.Entry<Long, FieldAdvanced> entry : displayGroupAdvanced.getFieldsMap().entrySet()) {
-          FieldAdvanced fieldAdvanced = entry.getValue();
-          String[] tmpArray = fieldAdvanced.getFieldType().split("\\.");
-          String actualType = "";
-          if (tmpArray.length > 0) {
-            actualType = tmpArray[tmpArray.length - 1];
-          }
-          if (fieldAdvanced.getFormComponent() != null) {
-            View formComponent = fieldAdvanced.getFormComponent();
-            if (fieldAdvanced.isFieldHasOptions()) {
-              if (formComponent instanceof Spinner) {
-                String key = ((Spinner) formComponent).getSelectedItem().toString();
-                String value = fieldAdvanced.getFieldOptionsMap().get(key);
-                if (value != null) {
-                  fieldAdvanced.setFieldValue(value);
-                }
-              }
-            } else if (actualType.equals("BooleanData")) {
-              if (formComponent instanceof CheckBox) {
-                fieldAdvanced.setFieldValue(String.valueOf(((CheckBox) formComponent).isChecked()));
-              }
-            } else if (actualType.equals("FileData")) {
-              if (!fieldAdvanced.getFiles().isEmpty()) {
-                String uuid = uploadFile(fieldAdvanced.getFiles().get(0));
-                if (uuid.equals("failed")) {
-                  outerbreak = true;
-                  publishProgress(getResources().getString(R.string.file_fail));
-                  break;
-                }
-                fieldAdvanced.setFieldValue(uuid);
-              }
-            } else if (actualType.equals("FileDataList")) {
-              if (!fieldAdvanced.getFiles().isEmpty()) {
-                boolean wholeBreak = false;
-                // we need to clear as in case of retry it will be already populated.
-                fieldAdvanced.getFieldValues().clear();
-                for (File file : fieldAdvanced.getFiles()) {
-                  String uuid = uploadFile(file);
-                  if (uuid.equals("failed")) {
-                    outerbreak = true;
-                    wholeBreak = true;
-                    break;
-                  }
-                  fieldAdvanced.getFieldValues().add(uuid);
-                }
-                if (wholeBreak) {
-                  break;
-                }
-              }
-            } else {
-              if (formComponent instanceof EditText) {
-                String value = ((EditText) formComponent).getText().toString();
-                if (actualType.equals("UserDataList") || actualType.equals("StringDataList") || actualType.equals("RealDataList") || actualType.equals("IntegerDataList")) {
-                  String [] tmpVals = value.split(",");
-                  List<String> values = new ArrayList<>();
-                  for (String tmp : tmpVals) {
-                    // If we don't do this this add empty fields in
-                    if (!tmp.equals("")) {
-                      values.add(tmp);
-                    }
-                  }
-                  fieldAdvanced.setFieldValues(values);
-                } else {
-                  fieldAdvanced.setFieldValue(value);
-                }
-              }
-            }
-          }
-        }
-        if (outerbreak) {
-          break;
-        }
-      }
-
-      // If file upload has not failed the submit form
-      if (!outerbreak) {
-        publishProgress("Data submission started");
-        try {
-          JsonObject jsonObject = Ion
-              .with(CreateRequestActivity.this)
-              .load(ApiUrlBuilder.submitRequestForm(baId))
-              .setHeader("auth-token", authToken)
-              .setTimeout(60 * 60 * 1000)
-              .setJsonPojoBody(mainForm)
-              .asJsonObject()
-              .get();
-          publishProgress(jsonObject.get("message").toString());
-          if (jsonObject.has("message")) {
-            if (jsonObject.get("message").getAsString().equals("Request created")) {
-              requestId = jsonObject.get("requestId").getAsLong();
-              return true;
-            }
-          }
-          return false;
-        } catch (Exception e) {
-          return false;
-        }
-      }
-      return false;
-    }
-
-    private String uploadFile(File file) {
-      try {
-        // We are blocking the ui beacause until file is uploaded we can't get uuid
-        // which is needed to submit form.
-        publishProgress(getResources().getString(R.string.file_uploading) + file.getName());
-        JsonObject jsonObject = Ion
-            .with(CreateRequestActivity.this)
-            .load(ApiUrlBuilder.uploadFile(baId))
-            .setHeader("auth-token", authToken)
-            .setTimeout(60 * 60 * 1000)
-            .setMultipartFile("file", file)
-            .asJsonObject()
-            .get();
-        if (jsonObject.has("uuid")) {
-          publishProgress(getResources().getString(R.string.file_succ));
-          return jsonObject.get("uuid").getAsString();
-        }
-      } catch (Exception e) {
-        // pass
-      }
-      publishProgress("File upload for " + file.getName() + " failed");
-      return "failed";
-    }
-  }
 }

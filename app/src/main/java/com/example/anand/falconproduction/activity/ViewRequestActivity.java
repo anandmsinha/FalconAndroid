@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,12 +32,32 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
 
   private static final String tag = ViewRequestActivity.class.getName();
   long baId;
+  long actionId;
+  Button updateActionBtn;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     Log.d(tag, "onCreate called");
     super.onCreate(savedInstanceState);
     setContentView(R.layout.view_request_activity, this);
+
+    findViewById(R.id.back_to_ba_button).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        startActivity(new Intent(ViewRequestActivity.this, MainActivity.class));
+      }
+    });
+
+    updateActionBtn = (Button) findViewById(R.id.update_action_button);
+    updateActionBtn.setVisibility(View.INVISIBLE);
+    updateActionBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent finalIntent = new Intent(ViewRequestActivity.this, EditActionActivity.class);
+        finalIntent.putExtra("actionId", actionId);
+        startActivity(finalIntent);
+      }
+    });
   }
 
   /**
@@ -55,7 +77,7 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
   public void fillDetails(int groupCount) {
     Log.d(tag, "fillDetails called");
     baId = intentBundle.getLong("baId");
-    long actionId = intentBundle.getLong("actionId");
+    actionId = intentBundle.getLong("actionId");
     final ProgressDialog progressDialog = new ProgressDialog(this);
     progressDialog.setTitle("Loading....");
     progressDialog.setIndeterminate(false);
@@ -70,9 +92,11 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
           public void onCompleted(Exception e, JsonObject result) {
             if (e != null || !result.has("businessArea")) {
               if (e != null) {
-                Log.d(tag, e.getMessage());
+                buildErrorUi(false);
+                Log.e(tag, e.getMessage());
               } else {
-                Log.d(tag, result.toString());
+                buildErrorUi(true);
+                Log.e(tag, result.toString());
               }
               progressDialog.dismiss();
               Toast.makeText(ViewRequestActivity.this, "Unable to fetch action right now.",
@@ -86,8 +110,18 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
         });
   }
 
+  private void buildErrorUi(boolean permissionError) {
+    Log.d(tag, "buildErrorUi called");
+    LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main_action_view_content);
+    int resId = (permissionError) ? R.string.permission_view : R.string.fetch_error;
+    UiBuilder.fillLayoutWithMessage(this, mainLayout, this.getResources().getString(resId));
+  }
+
   private void buildUi(ActionModel actionModel, ProgressDialog progressDialog) {
     Log.d(tag, "buildUi called");
+    if (actionModel.isCanUpdateAction()) {
+      updateActionBtn.setVisibility(View.VISIBLE);
+    }
     LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main_action_view_content);
     TextView mainActionTitle = (TextView) findViewById(R.id.main_action_view_title);
     mainActionTitle.setText(actionModel.getDisplayTitle());

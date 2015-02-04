@@ -128,6 +128,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
     } else {
       groupId = 0;
     }
+    Log.d(TAG, "group id recieved - " + groupId);
     try {
       getSupportActionBar().setTitle(mainAdapter.getItem(groupId).toString());
       mainNavListView.setSelection(groupId);
@@ -180,7 +181,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
         SharedPreferences.Editor mainEditor = sharedPreferences.edit();
         mainEditor.clear();
         mainEditor.apply();
-        startActivity(new Intent(this, ActivityDecider.class));
+        super.startActivity(new Intent(this, ActivityDecider.class));
         return true;
       default:
         return super.onOptionsItemSelected(item);

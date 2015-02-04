@@ -33,7 +33,7 @@ public class ClientDeciderActivity extends Activity {
           SharedPreferences sharedPreferences = getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
           SharedPreferences.Editor tokenEditor = sharedPreferences.edit();
           tokenEditor.putString(ApplicationConstants.clientToken, text);
-          tokenEditor.commit();
+          tokenEditor.apply();
           startActivity(new Intent(ClientDeciderActivity.this, ActivityDecider.class));
         } else {
           Toast.makeText(ClientDeciderActivity.this, "Invalid token", Toast.LENGTH_LONG).show();

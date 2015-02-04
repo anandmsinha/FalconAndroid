@@ -10,18 +10,22 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.anand.falconproduction.R;
 import com.example.anand.falconproduction.activity.utility.MultipleFilesSelectionActivity;
 import com.example.anand.falconproduction.adapters.UserAutoCompleteAdapter;
 import com.example.anand.falconproduction.fragments.DateTimePicker;
+import com.example.anand.falconproduction.utility.DateFormatUtil;
 import com.example.anand.falconproduction.utility.UiBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -32,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,6 +47,8 @@ import java.util.List;
  * a field compared to plain Field class which contains minimal info.
  */
 public class FieldAdvanced {
+
+  private transient static final String TAG = FieldAdvanced.class.getName();
 
   private String fieldType;
   private transient String fieldDisplayName;
@@ -57,6 +64,15 @@ public class FieldAdvanced {
   private transient String fieldRegex;
   private String fieldValue;
   private List<String> fieldValues = new ArrayList<>();
+  // These two fields track old value of the field.
+  private transient boolean isEditMode;
+
+  public String getOldFieldValue() {
+    return oldFieldValue;
+  }
+
+  private transient String oldFieldValue;
+  private transient List<String> oldFieldValues = new ArrayList<>();
   // The following 5 properties are limited to filelist data type
   private transient View formComponent;
   private transient HashMap<String, String> fieldOptionsMap;
@@ -64,6 +80,11 @@ public class FieldAdvanced {
   private transient TextView filesNameTextView;
 
   public FieldAdvanced(JsonElement jsonElement) {
+    this(jsonElement, false);
+  }
+
+  public FieldAdvanced(JsonElement jsonElement, boolean isEdit) {
+    this.isEditMode = isEdit;
     JsonObject jsonObject = jsonElement.getAsJsonObject();
     fieldType = jsonObject.get("fieldType").getAsString();
     fieldDisplayName = jsonObject.get("fieldDisplayName").getAsString();
@@ -81,10 +102,31 @@ public class FieldAdvanced {
         }
       }
     }
+    /**
+     * Fill old values if it is update form.
+     */
+    if (isEdit && jsonObject.has("fieldValue")) {
+      JsonElement tmpJsonElement = jsonObject.get("fieldValue");
+      if (tmpJsonElement.isJsonArray()) {
+        JsonArray tmpJsonArray = tmpJsonElement.getAsJsonArray();
+        for (JsonElement tmpValue : tmpJsonArray) {
+          oldFieldValues.add(tmpValue.getAsString());
+        }
+      } else {
+        String tmpVal = tmpJsonElement.getAsString();
+        if (!"null".equals(tmpVal)) {
+          oldFieldValue = tmpVal;
+        }
+      }
+    }
     fieldRequiredErrorMessage = jsonObject.get("fieldRequiredErrorMessage").getAsString();
     fieldOrderId = jsonObject.get("fieldOrderId").getAsLong();
     fieldName = jsonObject.get("fieldOrderId").getAsString();
     fieldRegex = jsonObject.get("fieldRegex").getAsString();
+  }
+
+  public boolean isEditMode() {
+    return isEditMode;
   }
 
   public List<String> getFieldValues() {
@@ -148,13 +190,36 @@ public class FieldAdvanced {
       }
       if (fieldHasOptions) {
         fieldOptionsMap = new HashMap<>();
-        for (FieldOption fieldOption : fieldOptions) {
-          fieldOptionsMap.put(fieldOption.getDisplayName(), fieldOption.getName());
+        boolean shouldCheck = isEditMode && oldFieldValue != null;
+        String toFillValue = null;
+        if (shouldCheck) {
+          for (FieldOption fieldOption : fieldOptions) {
+            if (fieldOption.getName().equals(oldFieldValue)) {
+              toFillValue = fieldOption.getDisplayName();
+            }
+            fieldOptionsMap.put(fieldOption.getDisplayName(), fieldOption.getName());
+          }
+        } else {
+          for (FieldOption fieldOption : fieldOptions) {
+            fieldOptionsMap.put(fieldOption.getDisplayName(), fieldOption.getName());
+          }
         }
-        formComponent = UiBuilder.createSpinner(activity, fieldOptionsMap.keySet());
+        Spinner mainSpinner = UiBuilder.createSpinner(activity, fieldOptionsMap.keySet());
+        if (toFillValue != null) {
+          // No need to cast again as it has already been set to array adapter in UiBuilder
+          int position = ((ArrayAdapter<String>) mainSpinner.getAdapter()).getPosition(toFillValue);
+          if (position >= 0) {
+            mainSpinner.setSelection(position);
+          }
+        }
+        formComponent = mainSpinner;
       } else if (actualType.equals("StringData") || actualType.equals("IntegerData") || actualType.equals("RealData")) {
         // Not using regex (matches method) above as it is a costly operation and most of the actualTypes will matches StringData in rare case they will try to match beyong that.
-        formComponent = UiBuilder.createEditText(activity);
+        EditText mainText = UiBuilder.createEditText(activity);
+        if (isEditMode && oldFieldValue != null) {
+          mainText.setText(oldFieldValue);
+        }
+        formComponent = mainText;
       } else if (actualType.equals("FileDataList") || actualType.equals("FileData")) {
         Button mainUploadButton = UiBuilder.createButton(activity, activity.getResources().getString(R.string.select_file));
         mainUploadButton.setOnClickListener(new View.OnClickListener() {
@@ -166,16 +231,25 @@ public class FieldAdvanced {
         });
         formComponent = mainUploadButton;
         // Create a list view
-        filesNameTextView = UiBuilder.getTextView(activity, "");
+        String valToSet = "";
+        if ("FileData".equals(actualType) && oldFieldValue != null) {
+          valToSet = oldFieldValue;
+        } else if ("FileDataList".equals(actualType) && !oldFieldValues.isEmpty()) {
+          for (String tmp : oldFieldValues) {
+            valToSet = valToSet + tmp + ", ";
+          }
+        }
+        final String tmpFinalVal = valToSet;
+        filesNameTextView = UiBuilder.getTextView(activity, valToSet);
         filesNameTextView.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
             // for removing files
             if (!files.isEmpty()) {
-              String [] fileNames = new String[files.size()];
-              boolean [] filesChecked = new boolean[files.size()];
+              String[] fileNames = new String[files.size()];
+              boolean[] filesChecked = new boolean[files.size()];
               final ArrayList<File> finalList = new ArrayList<>(files);
-              for (int i = 0, _l = files.size(); i < _l; ++i)  {
+              for (int i = 0, _l = files.size(); i < _l; ++i) {
                 fileNames[i] = files.get(i).getAbsolutePath();
                 filesChecked[i] = true;
               }
@@ -196,6 +270,7 @@ public class FieldAdvanced {
                   finalList.removeAll(Collections.singleton(null));
                   files = finalList;
                   StringBuilder finalNameToBeSet = new StringBuilder();
+                  finalNameToBeSet.append(tmpFinalVal);
                   for (File file : files) {
                     finalNameToBeSet.append(file.getAbsolutePath());
                     finalNameToBeSet.append(", ");
@@ -213,25 +288,53 @@ public class FieldAdvanced {
             }
           }
         });
-        // for removing files use - http://developer.android.com/guide/topics/ui/dialogs.html (Pick a color example)
       } else if (actualType.equals("BooleanData")) {
-        formComponent = UiBuilder.createCheckbox(activity);
+        CheckBox mainCheckbox = UiBuilder.createCheckbox(activity);
+        if (isEditMode && oldFieldValue != null) {
+          if ("true".equalsIgnoreCase(oldFieldValue)) {
+            mainCheckbox.setChecked(true);
+          }
+        }
+        formComponent = mainCheckbox;
       } else if (actualType.equals("TextData")) {
-        formComponent = UiBuilder.createTextInput(activity);
+        EditText mainText = UiBuilder.createTextInput(activity);
+        if (isEditMode && oldFieldValue != null) {
+          mainText.setText(oldFieldValue);
+        }
+        formComponent = mainText;
       } else if (actualType.equals("UserDataList")) {
         MultiAutoCompleteTextView multiAutoCompleteTextView = new MultiAutoCompleteTextView(activity);
         multiAutoCompleteTextView.setAdapter(new UserAutoCompleteAdapter(activity, android.R.layout.simple_dropdown_item_1line));
         multiAutoCompleteTextView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        if (isEditMode && !oldFieldValues.isEmpty()) {
+          StringBuilder output = new StringBuilder();
+          for (String tmp : oldFieldValues) {
+            output.append(tmp).append(", ");
+          }
+          multiAutoCompleteTextView.setText(output.toString());
+        }
         formComponent = multiAutoCompleteTextView;
       } else if (actualType.equals("UserData")) {
         AutoCompleteTextView autoCompleteTextView = UiBuilder.createAutoCompleteText(activity);
         autoCompleteTextView.setAdapter(new UserAutoCompleteAdapter(activity, android.R.layout.simple_dropdown_item_1line));
+        if (isEditMode && oldFieldValue != null) {
+          autoCompleteTextView.setText(oldFieldValue);
+        }
         formComponent = autoCompleteTextView;
       } else if (actualType.equals("DateData")) {
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM d, yyyy");
         final EditText dateInputText = UiBuilder.createEditText(activity);
         dateInputText.setInputType(InputType.TYPE_NULL);
         Calendar newCalender = Calendar.getInstance();
+        if (isEditMode && oldFieldValue != null) {
+          // In many case there has been format error so convert the format
+          try {
+            Date newDate = DateFormatUtil.parse(oldFieldValue);
+            dateInputText.setText(simpleDateFormat.format(newDate));
+          } catch (Exception e) {
+            Log.e(TAG, "Error in old date format");
+          }
+        }
         final DatePickerDialog pickDateDialog = new DatePickerDialog(activity, new DatePickerDialog.OnDateSetListener() {
           @Override
           public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -254,7 +357,15 @@ public class FieldAdvanced {
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d-MMM-yyyy,HH:mm:ss aaa");
         final EditText dateInputText = UiBuilder.createEditText(activity);
         dateInputText.setInputType(InputType.TYPE_NULL);
-
+        if (isEditMode && oldFieldValue != null) {
+          try {
+            Log.d(TAG, "String recieved - " + oldFieldValue);
+            Date newDate = DateFormatUtil.parse(oldFieldValue);
+            dateInputText.setText(simpleDateFormat.format(newDate));
+          } catch (Exception e) {
+            Log.e(TAG, "Error in old date time format - " + e.getMessage());
+          }
+        }
         final Dialog dateTimeDialog = new Dialog(activity);
         final RelativeLayout mDateTimeDialogView =
             (RelativeLayout) activity.getLayoutInflater().inflate(R.layout.date_time_dialog, null);
@@ -295,7 +406,19 @@ public class FieldAdvanced {
 
         formComponent = dateInputText;
       } else {
-        formComponent = UiBuilder.createEditText(activity);
+        EditText editText = UiBuilder.createEditText(activity);
+        if (isEditMode) {
+          if (oldFieldValue != null) {
+            editText.setText(oldFieldValue);
+          } else if (!oldFieldValues.isEmpty()) {
+            StringBuilder output = new StringBuilder();
+            for (String tmp : oldFieldValues) {
+              output.append(tmp).append(", ");
+            }
+            editText.setText(output.toString());
+          }
+        }
+        formComponent = editText;
       }
     }
 
@@ -324,10 +447,6 @@ public class FieldAdvanced {
     return fieldType;
   }
 
-  public void setFieldType(String fieldType) {
-    this.fieldType = fieldType;
-  }
-
   public String getFieldDisplayName() {
     if (fieldIsRequired) {
       return fieldDisplayName + "*";
@@ -335,88 +454,20 @@ public class FieldAdvanced {
     return fieldDisplayName;
   }
 
-  public void setFieldDisplayName(String fieldDisplayName) {
-    this.fieldDisplayName = fieldDisplayName;
-  }
-
   public long getFieldId() {
     return fieldId;
-  }
-
-  public void setFieldId(long fieldId) {
-    this.fieldId = fieldId;
-  }
-
-  public String getFieldRegexErrorMessage() {
-    return fieldRegexErrorMessage;
-  }
-
-  public void setFieldRegexErrorMessage(String fieldRegexErrorMessage) {
-    this.fieldRegexErrorMessage = fieldRegexErrorMessage;
   }
 
   public boolean isFieldIsRequired() {
     return fieldIsRequired;
   }
 
-  public void setFieldIsRequired(boolean fieldIsRequired) {
-    this.fieldIsRequired = fieldIsRequired;
-  }
-
   public boolean isFieldHasOptions() {
     return fieldHasOptions;
   }
 
-  public void setFieldHasOptions(boolean fieldHasOptions) {
-    this.fieldHasOptions = fieldHasOptions;
-  }
-
   public long getFieldUiComponentType() {
     return fieldUiComponentType;
-  }
-
-  public void setFieldUiComponentType(long fieldUiComponentType) {
-    this.fieldUiComponentType = fieldUiComponentType;
-  }
-
-  public List<FieldOption> getFieldOptions() {
-    return fieldOptions;
-  }
-
-  public void setFieldOptions(List<FieldOption> fieldOptions) {
-    this.fieldOptions = fieldOptions;
-  }
-
-  public String getFieldRequiredErrorMessage() {
-    return fieldRequiredErrorMessage;
-  }
-
-  public void setFieldRequiredErrorMessage(String fieldRequiredErrorMessage) {
-    this.fieldRequiredErrorMessage = fieldRequiredErrorMessage;
-  }
-
-  public long getFieldOrderId() {
-    return fieldOrderId;
-  }
-
-  public void setFieldOrderId(long fieldOrderId) {
-    this.fieldOrderId = fieldOrderId;
-  }
-
-  public String getFieldName() {
-    return fieldName;
-  }
-
-  public void setFieldName(String fieldName) {
-    this.fieldName = fieldName;
-  }
-
-  public String getFieldRegex() {
-    return fieldRegex;
-  }
-
-  public void setFieldRegex(String fieldRegex) {
-    this.fieldRegex = fieldRegex;
   }
 
 }

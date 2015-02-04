@@ -2,7 +2,7 @@ package com.example.anand.falconproduction.utility;
 
 /**
  * Created by anand on 16/12/14.
- *
+ * <p/>
  * This class creates url's from which api can be accessed.
  */
 public class ApiUrlBuilder {
@@ -34,5 +34,21 @@ public class ApiUrlBuilder {
   public static String submitRequestForm(long baId) {
     return ApplicationConstants.baseAppUrl
         + "request/submitForm?clientId=" + ApplicationConstants.clientId + "&baId=" + baId;
+  }
+
+  public static String submitUpdateActionForm(long baId, long actionId) {
+    return ApplicationConstants.baseAppUrl
+        + "request/submitUpdateActionForm?clientId="
+        + ApplicationConstants.clientId
+        + "&baId="
+        + baId
+        + "&actionIdUrl="
+        + actionId;
+  }
+
+  public static String getUpdateActionForm(long baId, long actionId) {
+    return ApplicationConstants.baseAppUrl
+        + "actions/updateForm?clientId=" + ApplicationConstants.clientId
+        + "&baId=" + baId + "&actionId=" + actionId;
   }
 }

@@ -21,14 +21,22 @@ public class RequestForm {
 
   private List<DisplayGroupAdvanced> displayGroupsAdvanced;
   private long baId;
+  private transient String formDisplayName;
 
   public RequestForm(JsonObject jsonObject, long baId) {
+    this(jsonObject, baId, false);
+  }
+
+  public RequestForm(JsonObject jsonObject, long baId, boolean isEdit) {
     this.baId = baId;
     displayGroupsAdvanced = new ArrayList<>();
     JsonArray jsonArray = jsonObject.getAsJsonArray("actionDisplayGroups");
+    if (isEdit) {
+      this.formDisplayName = jsonObject.get("mainTitle").getAsString();
+    }
     if (jsonArray != null) {
       for (JsonElement jsonElement : jsonArray) {
-        displayGroupsAdvanced.add(new DisplayGroupAdvanced(jsonElement));
+        displayGroupsAdvanced.add(new DisplayGroupAdvanced(jsonElement, isEdit));
       }
     }
   }
@@ -57,8 +65,20 @@ public class RequestForm {
             String[] arr = fieldAdvanced.getFieldType().split("\\.");
             String fieldType = arr[arr.length - 1];
             if (fieldType.equals("FileDataList") || fieldType.equals("FileData")) {
-              if (fieldAdvanced.getFiles().size() == 0) {
-                formValidator.addMessage(String.format("Field - %s is required", fieldAdvanced.getFieldDisplayName()));
+              if (fieldAdvanced.isEditMode()) {
+                boolean isError = false;
+                if ("FileData".equals(fieldType)) {
+                  if (fieldAdvanced.getOldFieldValue() == null || fieldAdvanced.getFiles().size() == 0) {
+                    isError = true;
+                  }
+                } else {
+                  if (fieldAdvanced.getFieldValues().isEmpty() || fieldAdvanced.getFiles().size() == 0) {
+                    isError = true;
+                  }
+                }
+                if (isError) {
+                  formValidator.addMessage(String.format("Field - %s is required", fieldAdvanced.getFieldDisplayName()));
+                }
               }
             } else if (!fieldType.equals("BooleanData")) {
               View formComponent = fieldAdvanced.getFormComponent();
@@ -91,6 +111,10 @@ public class RequestForm {
 
   public void setDisplayGroupsAdvanced(List<DisplayGroupAdvanced> displayGroupsAdvanced) {
     this.displayGroupsAdvanced = displayGroupsAdvanced;
+  }
+
+  public String getFormDisplayName() {
+    return formDisplayName;
   }
 
 }
