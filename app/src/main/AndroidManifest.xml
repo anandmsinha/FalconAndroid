@@ -38,13 +38,13 @@
         <activity
             android:name="com.example.anand.falconproduction.activity.MainActivity">
         </activity>
-        <activity android:name=".activity.ViewRequestActivity">
-        </activity>
         <activity android:name=".activity.CreateRequestActivity">
         </activity>
         <activity android:name=".activity.utility.MultipleFilesSelectionActivity">
         </activity>
         <activity android:name=".activity.EditActionActivity">
+        </activity>
+        <activity android:name=".activity.AdvancedViewRequestActivity">
         </activity>
         <activity
             android:name=".activity.SearchResultsActivity"

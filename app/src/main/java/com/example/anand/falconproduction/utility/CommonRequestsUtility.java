@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.anand.falconproduction.interfaces.GetActionModel;
 import com.example.anand.falconproduction.interfaces.GetBaFeed;
 import com.example.anand.falconproduction.interfaces.GetBaMap;
+import com.example.anand.falconproduction.models.ActionModel;
 import com.example.anand.falconproduction.models.BaFeed;
 import com.example.anand.falconproduction.models.BaGroups;
 import com.google.gson.JsonArray;
@@ -70,6 +72,31 @@ public class CommonRequestsUtility {
     } else {
       next.processBaMap(baGroups);
     }
+  }
+
+  public static void fetchActionModel(final Context context, String authToken, long baId, long actionId, final GetActionModel getActionModel) {
+    Log.d(tag, "fetchActionModel called");
+    Ion.with(context)
+        .load(SearchQueryBuilder.getAnAction(baId, actionId))
+        .setHeader("auth-token", authToken)
+        .asJsonObject()
+        .setCallback(new FutureCallback<JsonObject>() {
+          @Override
+          public void onCompleted(Exception e, JsonObject result) {
+            if (e != null || !result.has(ApplicationConstants.businessArea)) {
+              Log.d(tag, "Error in fetching action. " + result.toString());
+              if (e != null) {
+                getActionModel.onActionModelFetchError(true);
+              } else {
+                getActionModel.onActionModelFetchError(false);
+              }
+            } else {
+              Log.d(tag, "Response fetch successfull building ui.");
+              ActionModel actionModel = new ActionModel(result);
+              getActionModel.processActionModel(actionModel);
+            }
+          }
+        });
   }
 
   /**

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/view_activity_fragment_root"
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+        <!-- Relative layout is needed for alignement of back and update buttons. -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:padding="10dip"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/back_to_ba_button"
+                android:text="@string/back"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/update_action_button"
+                android:text="@string/update"
+                android:visibility="invisible"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+        <!-- Rest of the content. -->
+        <TextView
+            android:id="@+id/main_action_view_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="10dip"
+            android:paddingBottom="15dip"
+            android:paddingTop="15dip"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+</ScrollView>

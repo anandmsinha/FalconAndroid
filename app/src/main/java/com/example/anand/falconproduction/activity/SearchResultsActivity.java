@@ -49,6 +49,7 @@ public class SearchResultsActivity extends Activity {
   String query;
   long baId;
   String token;
+  int group;
   // denotes if result has been fetched one time or not. show no results found message based on that
   boolean firstFetch = false;
 
@@ -75,8 +76,10 @@ public class SearchResultsActivity extends Activity {
   private void handleIntent(Intent intent) {
     Log.d(TAG, "handleIntent called");
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+      Log.d(TAG, intent.getExtras().toString());
       query = intent.getStringExtra(SearchManager.QUERY);
       baId = intent.getLongExtra("baId", 0);
+      group = intent.getIntExtra("group", 0);
       searchResultsAdapter = new ArrayAdapter<JsonObject>(this, 0) {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -113,9 +116,10 @@ public class SearchResultsActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
           JsonObject mainObject = searchResultsAdapter.getItem(position);
-          Intent requestViewIntent = new Intent(SearchResultsActivity.this, ViewRequestActivity.class);
+          Intent requestViewIntent = new Intent(SearchResultsActivity.this, AdvancedViewRequestActivity.class);
           requestViewIntent.putExtra("baId", baId);
-          requestViewIntent.putExtra("actionId", mainObject.get("requestId").getAsLong());
+          requestViewIntent.putExtra("group", group);
+          requestViewIntent.putExtra("actionId", mainObject.get("actionId").getAsLong());
           startActivity(requestViewIntent);
         }
       });

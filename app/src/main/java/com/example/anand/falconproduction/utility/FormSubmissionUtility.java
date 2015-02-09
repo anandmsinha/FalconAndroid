@@ -12,8 +12,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.anand.falconproduction.R;
+import com.example.anand.falconproduction.activity.AdvancedViewRequestActivity;
 import com.example.anand.falconproduction.activity.MainActivity;
-import com.example.anand.falconproduction.activity.ViewRequestActivity;
 import com.example.anand.falconproduction.models.create.DisplayGroupAdvanced;
 import com.example.anand.falconproduction.models.create.FieldAdvanced;
 import com.example.anand.falconproduction.models.create.RequestForm;
@@ -92,7 +92,7 @@ public class FormSubmissionUtility {
           mainIntent = new Intent(activity, MainActivity.class);
           activity.startActivity(mainIntent);
         } else {
-          mainIntent = new Intent(activity, ViewRequestActivity.class);
+          mainIntent = new Intent(activity, AdvancedViewRequestActivity.class);
           Log.d(TAG, "starting action with id " + newActionId);
           mainIntent.putExtra("actionId", newActionId);
           mainIntent.putExtra("baId", baId);

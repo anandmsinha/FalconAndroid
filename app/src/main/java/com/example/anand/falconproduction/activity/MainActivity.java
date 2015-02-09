@@ -109,7 +109,7 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
           BaFeed baFeed = feedsAdapter.getItem(position);
-          Intent requestViewIntent = new Intent(MainActivity.this, ViewRequestActivity.class);
+          Intent requestViewIntent = new Intent(MainActivity.this, AdvancedViewRequestActivity.class);
           requestViewIntent.putExtra("baId", baFeed.getBaId());
           requestViewIntent.putExtra("actionId", baFeed.getActionId());
           startActivity(requestViewIntent);

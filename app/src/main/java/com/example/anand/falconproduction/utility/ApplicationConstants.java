@@ -17,6 +17,8 @@ public class ApplicationConstants {
 
   public static final String clientToken = "clientToken";
 
+  public static final String businessArea = "businessArea";
+
   public static long clientId = 1L;
 
   public static void setBaseAppUrl(String s) {

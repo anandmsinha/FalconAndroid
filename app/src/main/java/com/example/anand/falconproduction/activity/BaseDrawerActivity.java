@@ -195,6 +195,12 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
   }
 
   @Override
+  public void startActivity(Intent intent) {
+    intent.putExtra("group", groupId);
+    super.startActivity(intent);
+  }
+
+  @Override
   public void onBackPressed() {
     if (mainDrawerLayout.isDrawerOpen(Gravity.START | Gravity.LEFT)) {
       mainDrawerLayout.closeDrawers();

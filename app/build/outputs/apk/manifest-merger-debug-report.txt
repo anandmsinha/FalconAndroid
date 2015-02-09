@@ -84,19 +84,19 @@ activity#com.example.anand.falconproduction.activity.MainActivity
 ADDED from AndroidManifest.xml:38:9
 	android:name
 		ADDED from AndroidManifest.xml:39:13
-activity#com.example.anand.falconproduction.activity.ViewRequestActivity
+activity#com.example.anand.falconproduction.activity.CreateRequestActivity
 ADDED from AndroidManifest.xml:41:9
 	android:name
 		ADDED from AndroidManifest.xml:41:19
-activity#com.example.anand.falconproduction.activity.CreateRequestActivity
+activity#com.example.anand.falconproduction.activity.utility.MultipleFilesSelectionActivity
 ADDED from AndroidManifest.xml:43:9
 	android:name
 		ADDED from AndroidManifest.xml:43:19
-activity#com.example.anand.falconproduction.activity.utility.MultipleFilesSelectionActivity
+activity#com.example.anand.falconproduction.activity.EditActionActivity
 ADDED from AndroidManifest.xml:45:9
 	android:name
 		ADDED from AndroidManifest.xml:45:19
-activity#com.example.anand.falconproduction.activity.EditActionActivity
+activity#com.example.anand.falconproduction.activity.AdvancedViewRequestActivity
 ADDED from AndroidManifest.xml:47:9
 	android:name
 		ADDED from AndroidManifest.xml:47:19

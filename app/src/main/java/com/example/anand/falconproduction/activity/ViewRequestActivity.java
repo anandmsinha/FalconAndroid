@@ -26,7 +26,7 @@ import com.koushikdutta.ion.Ion;
 /**
  * Created by anand on 1/12/14.
  * <p/>
- * Main ba feed adapter.
+ * Main ba feed adapter. Depreceted class do not use it.
  */
 public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAfterDrawer {
 
@@ -78,10 +78,7 @@ public class ViewRequestActivity extends BaseDrawerActivity implements ProcessAf
     Log.d(tag, "fillDetails called");
     baId = intentBundle.getLong("baId");
     actionId = intentBundle.getLong("actionId");
-    final ProgressDialog progressDialog = new ProgressDialog(this);
-    progressDialog.setTitle("Loading....");
-    progressDialog.setIndeterminate(false);
-    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+    final ProgressDialog progressDialog = UiBuilder.createProgressDialog(this, "Loading....", "");
     progressDialog.show();
     Ion.with(this)
         .load(SearchQueryBuilder.getAnAction(baId, actionId))

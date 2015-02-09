@@ -2,7 +2,11 @@ package com.example.anand.falconproduction.utility;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,9 +18,14 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.anand.falconproduction.R;
+import com.example.anand.falconproduction.activity.EditActionActivity;
+import com.example.anand.falconproduction.activity.MainActivity;
+import com.example.anand.falconproduction.models.ActionModel;
 import com.example.anand.falconproduction.models.create.DisplayGroupAdvanced;
 import com.example.anand.falconproduction.models.create.FieldAdvanced;
 import com.example.anand.falconproduction.models.create.RequestForm;
+import com.example.anand.falconproduction.models.view.DisplayGroup;
 
 import java.util.Map;
 import java.util.Set;
@@ -58,6 +67,12 @@ public class UiBuilder {
     return editText;
   }
 
+  /**
+   * Right now for text input we are using a normal EditText field.
+   * Todo - Use a rich text editor here.
+   * @param activity - Calling activity
+   * @return - Instance of Editor.
+   */
   public static EditText createTextInput(Activity activity) {
     EditText editText = createEditText(activity);
     editText.setSingleLine(false);
@@ -76,10 +91,22 @@ public class UiBuilder {
     return checkBox;
   }
 
+  /**
+   * Create a simple autocomplete text view
+   * @param activity - Calling activity
+   * @return - Instance of AutoCompleteTextView
+   */
   public static AutoCompleteTextView createAutoCompleteText(Activity activity) {
     return new AutoCompleteTextView(activity);
   }
 
+  /**
+   * Create a normal progress dialog
+   * @param activity - Calling activity
+   * @param title - Main title
+   * @param content - Main content
+   * @return - Instance of ProgressDialog
+   */
   public static ProgressDialog createProgressDialog(Activity activity, String title, String content) {
     ProgressDialog mProgressDialog = new ProgressDialog(activity);
     mProgressDialog.setTitle(title);
@@ -121,6 +148,51 @@ public class UiBuilder {
     parentLaout.addView(processResults);
   }
 
+  public static void buildViewActivityUi(final Activity activity, final ActionModel actionModel, Button updateActionBtn, LinearLayout mainLayout, ProgressDialog progressDialog) {
+    Log.d(TAG, "buildViewActivityUi called");
+
+    mainLayout.findViewById(R.id.back_to_ba_button).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent finalIntent = new Intent(activity, MainActivity.class);
+        activity.startActivity(finalIntent);
+      }
+    });
+    
+    if (actionModel.isCanUpdateAction()) {
+      updateActionBtn.setVisibility(View.VISIBLE);
+      updateActionBtn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Intent finalIntent = new Intent(activity, EditActionActivity.class);
+          finalIntent.putExtra("actionId", actionModel.getActionId());
+          activity.startActivity(finalIntent);
+        }
+      });
+    }
+    TextView mainActionTitle = (TextView) mainLayout.findViewById(R.id.main_action_view_title);
+    mainActionTitle.setText(actionModel.getDisplayTitle());
+    Log.d(TAG, "Size of display groups " + actionModel.getDisplayGroups().size());
+    for (DisplayGroup displayGroup : actionModel.getDisplayGroups()) {
+      LinearLayout linearLayout = LayoutBuilder.getStandardFalconLayout(activity);
+      TextView dispHeading = UiBuilder.createBoldTextView(activity, displayGroup.getTitle());
+      linearLayout.addView(dispHeading);
+      TextView otherDetails = new TextView(activity);
+      otherDetails.setText(Html.fromHtml(displayGroup.getFieldsHtml()));
+      otherDetails.setMovementMethod(LinkMovementMethod.getInstance());
+      linearLayout.addView(otherDetails);
+      mainLayout.addView(linearLayout);
+    }
+    progressDialog.dismiss();
+  }
+
+  /**
+   * This methods is used when activity result method is called after file
+   * has been selected in filepicker.
+   * @param fieldId - fieldid of the file field
+   * @param files - list of selected files
+   * @param requestForm - - Instance of form
+   */
   public static void addFilesToList(long fieldId, List<File> files, RequestForm requestForm) {
     if (files != null && !files.isEmpty()) {
       for (DisplayGroupAdvanced displayGroupAdvanced : requestForm.getDisplayGroupsAdvanced()) {
@@ -138,6 +210,12 @@ public class UiBuilder {
     }
   }
 
+  /**
+   * General utility method to fill a layout with bold text
+   * @param activity - calling activity
+   * @param linearLayout - Main layout
+   * @param message - Bold message to be shown
+   */
   public static void fillLayoutWithMessage(Activity activity, LinearLayout linearLayout, String message) {
     LayoutBuilder.transformToFalconLayout(activity, linearLayout);
     TextView messageText = createBoldTextView(activity, message);

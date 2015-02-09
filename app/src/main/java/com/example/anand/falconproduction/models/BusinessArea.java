@@ -33,4 +33,7 @@ public class BusinessArea {
     }
   }
 
+  public long getBaId() {
+    return baId;
+  }
 }
