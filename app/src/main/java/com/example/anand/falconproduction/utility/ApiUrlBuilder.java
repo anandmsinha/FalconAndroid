@@ -38,17 +38,18 @@ public class ApiUrlBuilder {
 
   public static String submitUpdateActionForm(long baId, long actionId) {
     return ApplicationConstants.baseAppUrl
-        + "request/submitUpdateActionForm?clientId="
-        + ApplicationConstants.clientId
-        + "&baId="
-        + baId
-        + "&actionIdUrl="
-        + actionId;
+            + "request/submitUpdateActionForm?clientId=" + ApplicationConstants.clientId
+            + "&baId=" + baId + "&actionIdUrl=" + actionId;
   }
 
   public static String getUpdateActionForm(long baId, long actionId) {
     return ApplicationConstants.baseAppUrl
         + "actions/updateForm?clientId=" + ApplicationConstants.clientId
         + "&baId=" + baId + "&actionId=" + actionId;
+  }
+
+  public static String getBaMenu() {
+    return ApplicationConstants.baseAppUrl
+        + "bagroups/permissible" + "?clientId=" + ApplicationConstants.clientId;
   }
 }

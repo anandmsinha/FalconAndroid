@@ -54,7 +54,8 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
   int groupId = -1;
   ProcessAfterDrawer nextMethod;
   String authToken;
-  HashMap<Long, BaGroups> baGroupsMap = new HashMap<>();
+  HashMap<Long, Long> baGroupsMap = new HashMap<>();
+  List<BaGroups> finalList = new ArrayList<>();
 
   /**
    * Here we instatnitate the drawer menu.
@@ -73,7 +74,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
     SharedPreferences preferences = getSharedPreferences(ApplicationConstants.appSharedPreference,
         MODE_PRIVATE);
     authToken = preferences.getString(ApplicationConstants.appAuthToken, "token");
-    CommonRequestsUtility.getBaMap(this, this);
+    CommonRequestsUtility.getBaMap(this, authToken, this);
   }
 
   @Override
@@ -85,7 +86,6 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
     /**
      * fetch only the Ba since right now we are creating linear menu.
      */
-    List<BaGroups> finalList = new ArrayList<>();
     for (BaGroups baGroups : list) {
       if (baGroups.isYield()) {
         if (baGroups.isGroup()) {
@@ -95,8 +95,8 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
         }
       }
     }
-    for (BaGroups baGroups : finalList) {
-      baGroupsMap.put(baGroups.getBaId(), baGroups);
+    for (int i = 0, _l = finalList.size(); i < _l; ++i) {
+      baGroupsMap.put(finalList.get(i).getBaId(), (long) i);
     }
     mainAdapter = new BaGroupListAdapter(getLayoutInflater(), finalList);
     mainNavListView.setAdapter(mainAdapter);
@@ -124,11 +124,13 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
 
     intentBundle = getIntent().getExtras();
     if (intentBundle != null) {
-      groupId = intentBundle.getInt("group");
+      groupId = intentBundle.getInt("group", 0);
     } else {
-      groupId = 0;
+      long baId = CommonRequestsUtility.getDefaultBaId();
+      long fPosition = baGroupsMap.get(baId);
+      groupId = (int) fPosition;
     }
-    Log.d(TAG, "group id recieved - " + groupId);
+    Log.d(TAG, "Group id recieved from bundle is - " + groupId);
     try {
       getSupportActionBar().setTitle(mainAdapter.getItem(groupId).toString());
       mainNavListView.setSelection(groupId);
@@ -161,7 +163,8 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
         //startActivity(new Intent(this, SearchResultsActivity.class));
         return true;
       case R.id.main_add_button:
-        BaGroups tmpBaGroup = baGroupsMap.get(getBaId());
+        long baGroupPosition = baGroupsMap.get(getBaId());
+        BaGroups tmpBaGroup = finalList.get((int) baGroupPosition);
         if (tmpBaGroup != null) {
           // check if user has create permission in Ba.
           if (tmpBaGroup.isBaCreatePermission()) {
