@@ -66,7 +66,6 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
     Log.d(TAG, "setContentView called");
     super.setContentView(resId);
     nextMethod = next;
-    //String[] menu = new String[]{"Home", "Android", "Windows", "Linux", "Raspberry Pi", "WordPress", "Videos", "Contact Us"};
     mainNavListView = (ListView) findViewById(R.id.main_nav_list);
     mainDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
     mainDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
