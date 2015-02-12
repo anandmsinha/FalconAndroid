@@ -44,7 +44,7 @@ public class ActivityDecider extends Activity {
           ApplicationConstants.setClientId(1L);
           break;
         case "UATtest":
-          url = "https://10.36.1.62/falcon-dms/rest/api";
+          url = "https://10.36.1.62/falcon-dms/rest/api/";
           ApplicationConstants.setClientId(1L);
           break;
         default:

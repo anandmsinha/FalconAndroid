@@ -3,10 +3,14 @@ package com.example.anand.falconproduction.activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.anand.falconproduction.R;
 import com.example.anand.falconproduction.interfaces.ProcessAfterDrawer;
+import com.example.anand.falconproduction.models.search.SavedSearchWrapper;
 import com.example.anand.falconproduction.utility.ApiUrlBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 /**
@@ -40,7 +44,18 @@ public class SavedSearchActivity extends BaseDrawerActivity implements ProcessAf
     }
     Ion.with(this)
         .load(ApiUrlBuilder.getSavedSearches())
-        .setHeader("auth-token", authToken);
+        .setHeader("auth-token", authToken)
+        .as(new TypeToken<SavedSearchWrapper>(){})
+        .setCallback(new FutureCallback<SavedSearchWrapper>() {
+          @Override
+          public void onCompleted(Exception e, SavedSearchWrapper result) {
+            if (e != null) {
+              Log.e(Tag, "Error loading saved searches.", e);
+              Toast.makeText(SavedSearchActivity.this, "Error in loading saved searches.", Toast.LENGTH_LONG).show();
+              return;
+            }
 
+          }
+        });
   }
 }
