@@ -52,4 +52,9 @@ public class ApiUrlBuilder {
     return ApplicationConstants.baseAppUrl
         + "bagroups/permissible" + "?clientId=" + ApplicationConstants.clientId;
   }
+
+  public static String getSavedSearches() {
+    return ApplicationConstants.baseAppUrl
+        + "setup/savedSearches" + "?clientId=" + ApplicationConstants.clientId;
+  }
 }

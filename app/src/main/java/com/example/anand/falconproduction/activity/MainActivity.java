@@ -48,17 +48,6 @@ public class MainActivity extends BaseDrawerActivity implements ProcessAfterDraw
     setContentView(R.layout.activity_main, this);
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    Log.d(tag, "onCreateOptionsMenu called");
-    getMenuInflater().inflate(R.menu.menu_main, menu);
-    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-    SearchView searchView = (SearchView) menu.findItem(R.id.main_search).getActionView();
-    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-    //searchView.setIconifiedByDefault(false);
-    return true;
-  }
-
   /**
    * This method has been overriden so that we can put ba id into intent.
    *

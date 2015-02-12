@@ -126,7 +126,10 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
       groupId = intentBundle.getInt("group", 0);
     } else {
       long baId = CommonRequestsUtility.getDefaultBaId();
-      long fPosition = baGroupsMap.get(baId);
+      long fPosition = 0;
+      if (baGroupsMap.containsKey(baId)) {
+       fPosition = baGroupsMap.get(baId);
+      }
       groupId = (int) fPosition;
     }
     Log.d(TAG, "Group id recieved from bundle is - " + groupId);
@@ -146,7 +149,6 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
     SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
     SearchView searchView = (SearchView) menu.findItem(R.id.main_search).getActionView();
     searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-    //searchView.setIconifiedByDefault(false);
     return true;
   }
 
@@ -206,9 +208,9 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
   public void onBackPressed() {
     if (mainDrawerLayout.isDrawerOpen(Gravity.START | Gravity.LEFT)) {
       mainDrawerLayout.closeDrawers();
-      return;
+    } else {
+      super.onBackPressed();
     }
-    super.onBackPressed();
   }
 
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
