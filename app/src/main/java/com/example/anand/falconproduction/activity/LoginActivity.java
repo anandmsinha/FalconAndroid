@@ -78,6 +78,7 @@ public class LoginActivity extends Activity {
           public void onCompleted(Exception e, JsonObject result) {
             Log.i(TAG, "Request complete");
             v.setEnabled(true);
+            String msg = "";
             if (e == null) {
               if (result.has(ApplicationConstants.serverResponseToken)) {
                 SharedPreferences sharedPreferences = getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
@@ -92,10 +93,11 @@ public class LoginActivity extends Activity {
               }
               Log.i(TAG, "Output - " + result.toString());
             } else {
+              msg = e.toString();
               Log.e(TAG, "Some exception occured - " + e.toString());
             }
             Log.e(TAG, "Authentication failed");
-            Toast.makeText(LoginActivity.this, "Authentication failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, "Authentication failed - " + msg, Toast.LENGTH_LONG).show();
           }
         });
   }
