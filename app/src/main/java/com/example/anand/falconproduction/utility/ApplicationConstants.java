@@ -15,6 +15,8 @@ public class ApplicationConstants {
 
   public static final String serverResponseToken = "token";
 
+  public static final String authTokenHeader = "auth-token";
+
   public static final String clientToken = "clientToken";
 
   public static final String businessArea = "businessArea";

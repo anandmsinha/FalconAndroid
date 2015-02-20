@@ -90,11 +90,11 @@
     <orderEntry type="library" exported="" name="play-services-4.2.42" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="androidasync-2.0.6" level="project" />
     <orderEntry type="library" exported="" name="merge-1.0.4" level="project" />
+    <orderEntry type="library" exported="" name="ion-2.0.6" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.4.0" level="project" />
-    <orderEntry type="library" exported="" name="ion-2.0.5" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3" level="project" />
-    <orderEntry type="library" exported="" name="androidasync-2.0.5" level="project" />
   </component>
 </module>
 

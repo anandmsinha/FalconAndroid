@@ -42,5 +42,6 @@
     <string name="permission_view">You don\'t have permission to view this action.</string>
     <string name="fetch_error">Error in fetching action.</string>
     <string name="saved_Searches">Saved searches</string>
+    <string name="error_saved_search">Error in loading saved searches.</string>
 
 </resources>

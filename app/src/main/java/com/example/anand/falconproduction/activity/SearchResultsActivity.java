@@ -33,7 +33,7 @@ import java.util.Map;
 
 /**
  * Created by anand on 15/12/14.
- *
+ * <p/>
  * Class for handling search results.
  */
 public class SearchResultsActivity extends Activity {
@@ -71,60 +71,59 @@ public class SearchResultsActivity extends Activity {
 
   /**
    * Recieve and process the intent.
+   *
    * @param intent - search intent
    */
   private void handleIntent(Intent intent) {
     Log.d(TAG, "handleIntent called");
-    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-      Log.d(TAG, intent.getExtras().toString());
-      query = intent.getStringExtra(SearchManager.QUERY);
-      baId = intent.getLongExtra("baId", 0);
-      group = intent.getIntExtra("group", 0);
-      searchResultsAdapter = new ArrayAdapter<JsonObject>(this, 0) {
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-          if (convertView == null) {
-            convertView = getLayoutInflater().inflate(R.layout.feed_list_row, parent, false);
-          }
-          if (position >= getCount() - 2) {
-            load();
-          }
-          JsonObject mainObject =  getItem(position);
-          TextView mainId = (TextView) convertView.findViewById(R.id.main_action_id);
-          mainId.setText(mainObject.get("requestDisplayId").getAsString() + " : " + mainObject.get("actionDisplayId").getAsString());
-          TextView mainActionTitle = (TextView) convertView.findViewById(R.id.main_action_title);
-          mainActionTitle.setText(mainObject.get("mainTitle").getAsString());
-          JsonObject searchHighlight = mainObject.getAsJsonObject("searchResultsFields");
+    Log.d(TAG, intent.getExtras().toString());
+    query = intent.getStringExtra(SearchManager.QUERY);
+    baId = intent.getLongExtra("baId", 0);
+    group = intent.getIntExtra("group", 0);
+    searchResultsAdapter = new ArrayAdapter<JsonObject>(this, 0) {
+      @Override
+      public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+          convertView = getLayoutInflater().inflate(R.layout.feed_list_row, parent, false);
+        }
+        if (position >= getCount() - 2) {
+          load();
+        }
+        JsonObject mainObject = getItem(position);
+        TextView mainId = (TextView) convertView.findViewById(R.id.main_action_id);
+        mainId.setText(mainObject.get("requestDisplayId").getAsString() + " : " + mainObject.get("actionDisplayId").getAsString());
+        TextView mainActionTitle = (TextView) convertView.findViewById(R.id.main_action_title);
+        mainActionTitle.setText(mainObject.get("mainTitle").getAsString());
+        JsonObject searchHighlight = mainObject.getAsJsonObject("searchResultsFields");
 
-          if (searchHighlight != null) {
-            StringBuilder htmlText = new StringBuilder();
-            for (Map.Entry<String, JsonElement> elementEntry : searchHighlight.entrySet()) {
-              htmlText.append("<p><b>");
-              htmlText.append(elementEntry.getKey());
-              htmlText.append("</b> : ");
-              htmlText.append(elementEntry.getValue().getAsString());
-              htmlText.append("</p>");
-            }
-            TextView mainRequestTime = (TextView) convertView.findViewById(R.id.main_request_time);
-            mainRequestTime.setText(Html.fromHtml(htmlText.toString()));
+        if (searchHighlight != null) {
+          StringBuilder htmlText = new StringBuilder();
+          for (Map.Entry<String, JsonElement> elementEntry : searchHighlight.entrySet()) {
+            htmlText.append("<p><b>");
+            htmlText.append(elementEntry.getKey());
+            htmlText.append("</b> : ");
+            htmlText.append(elementEntry.getValue().getAsString());
+            htmlText.append("</p>");
           }
-          return convertView;
+          TextView mainRequestTime = (TextView) convertView.findViewById(R.id.main_request_time);
+          mainRequestTime.setText(Html.fromHtml(htmlText.toString()));
         }
-      };
-      mListView.setAdapter(searchResultsAdapter);
-      mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-          JsonObject mainObject = searchResultsAdapter.getItem(position);
-          Intent requestViewIntent = new Intent(SearchResultsActivity.this, AdvancedViewRequestActivity.class);
-          requestViewIntent.putExtra("baId", baId);
-          requestViewIntent.putExtra("group", group);
-          requestViewIntent.putExtra("actionId", mainObject.get("actionId").getAsLong());
-          startActivity(requestViewIntent);
-        }
-      });
-      load();
-    }
+        return convertView;
+      }
+    };
+    mListView.setAdapter(searchResultsAdapter);
+    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        JsonObject mainObject = searchResultsAdapter.getItem(position);
+        Intent requestViewIntent = new Intent(SearchResultsActivity.this, AdvancedViewRequestActivity.class);
+        requestViewIntent.putExtra("baId", baId);
+        requestViewIntent.putExtra("group", group);
+        requestViewIntent.putExtra("actionId", mainObject.get("actionId").getAsLong());
+        startActivity(requestViewIntent);
+      }
+    });
+    load();
   }
 
   private void load() {
@@ -167,6 +166,7 @@ public class SearchResultsActivity extends Activity {
                     showResultsMessage("No search results found.");
                   }
                 }
+                Log.d(TAG, "No of search results " + totalResultsCount);
                 for (JsonElement jsonElement : mainResults) {
                   searchResultsAdapter.add(jsonElement.getAsJsonObject());
                 }

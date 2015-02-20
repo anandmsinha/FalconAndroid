@@ -180,6 +180,12 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
           Toast.makeText(this, "Some internal error has occured.", Toast.LENGTH_LONG).show();
         }
         return true;
+      case R.id.saved_searches:
+        Intent intent = new Intent(this, SavedSearchActivity.class);
+        intent.putExtra("baId", getBaId());
+        intent.putExtra("group", groupId);
+        startActivity(intent);
+        return true;
       case R.id.action_logout:
         SharedPreferences sharedPreferences = getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
         SharedPreferences.Editor mainEditor = sharedPreferences.edit();
