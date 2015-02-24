@@ -16,7 +16,8 @@ import com.example.anand.falconproduction.utility.ApplicationConstants;
 /**
  * Created by anand on 23/12/14.
  *
- * This class let's user decide the client.
+ * This class let's user decide the client. User can input a token which is client
+ * token it helps in deciding the base url for api.
  */
 public class ClientDeciderActivity extends Activity {
 
@@ -29,14 +30,14 @@ public class ClientDeciderActivity extends Activity {
       @Override
       public void onClick(View v) {
         String text = tokenText.getText().toString();
-        if (text.matches("anand||6081test||3081test||JSPLtest||JPLtest||UATtest")) {
+        if (ApplicationConstants.clientTokes.containsKey(text)) {
           SharedPreferences sharedPreferences = getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
           SharedPreferences.Editor tokenEditor = sharedPreferences.edit();
           tokenEditor.putString(ApplicationConstants.clientToken, text);
           tokenEditor.apply();
           startActivity(new Intent(ClientDeciderActivity.this, ActivityDecider.class));
         } else {
-          Toast.makeText(ClientDeciderActivity.this, "Invalid token", Toast.LENGTH_LONG).show();
+          Toast.makeText(ClientDeciderActivity.this, getResources().getString(R.string.invalid_token), Toast.LENGTH_LONG).show();
         }
       }
     });

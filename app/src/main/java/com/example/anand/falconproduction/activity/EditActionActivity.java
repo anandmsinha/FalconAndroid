@@ -51,7 +51,7 @@ public class EditActionActivity extends BaseDrawerActivity implements ProcessAft
     baId = intentBundle.getLong("baId");
     actionId = intentBundle.getLong("actionId");
     final ProgressDialog progressDialog = new ProgressDialog(this);
-    progressDialog.setTitle("Loading....");
+    progressDialog.setTitle(s(R.string.loading));
     progressDialog.setIndeterminate(false);
     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     progressDialog.show();
@@ -66,7 +66,7 @@ public class EditActionActivity extends BaseDrawerActivity implements ProcessAft
               Log.e(TAG, "Error in fetching update action form");
               progressDialog.dismiss();
               Toast.makeText(EditActionActivity.this,
-                  "Error in fetching update action form", Toast.LENGTH_SHORT).show();
+                  s(R.string.error_upd_form), Toast.LENGTH_SHORT).show();
             } else {
               Log.d(TAG, "Update action form successfully fetched.");
               updateForm = new RequestForm(result, baId, true);
@@ -104,7 +104,7 @@ public class EditActionActivity extends BaseDrawerActivity implements ProcessAft
     FormValidator formValidator = updateForm.isValid();
     if (formValidator.getErrorMessages().isEmpty()) {
       if (!formValidator.isTextError()) {
-        mProgressDialog = UiBuilder.createProgressDialog(this, "Submission in progress", "Preparing form");
+        mProgressDialog = UiBuilder.createProgressDialog(this, s(R.string.submission_progress), s(R.string.preparing_form));
         new FormSubmissionUtility(this, mProgressDialog, updateForm, true, baId, authToken, actionId, groupId);
       }
     } else {

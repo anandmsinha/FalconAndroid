@@ -454,6 +454,10 @@ public class FieldAdvanced {
     return fieldDisplayName;
   }
 
+  public List<FieldOption> getFieldOptions() {
+    return fieldOptions;
+  }
+
   public long getFieldId() {
     return fieldId;
   }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -59,7 +60,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
     Log.d(TAG, "fillDetails called");
     baId = intentBundle.getLong("baId");
     final ProgressDialog progressDialog = new ProgressDialog(this);
-    progressDialog.setTitle("Loading....");
+    progressDialog.setTitle(s(R.string.loading));
     progressDialog.setIndeterminate(false);
     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     progressDialog.show();
@@ -71,7 +72,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
           @Override
           public void onCompleted(Exception e, JsonObject result) {
             if (e != null || !result.has("actionDisplayGroups")) {
-              Toast.makeText(CreateRequestActivity.this, "Failed to load form try again", Toast.LENGTH_LONG).show();
+              Toast.makeText(CreateRequestActivity.this, s(R.string.failed_load_form), Toast.LENGTH_LONG).show();
               progressDialog.dismiss();
               return;
             }
@@ -130,7 +131,7 @@ public class CreateRequestActivity extends BaseDrawerActivity implements Process
     FormValidator formValidator = requestForm.isValid();
     if (formValidator.getErrorMessages().isEmpty()) {
       if (!formValidator.isTextError()) {
-        mProgressDialog = UiBuilder.createProgressDialog(this, "Submission in progress", "Preparing form");
+        mProgressDialog = UiBuilder.createProgressDialog(this, s(R.string.submission_progress), s(R.string.preparing_form));
         new FormSubmissionUtility(this, mProgressDialog, requestForm, false, baId, authToken, 0, groupId);
       }
     } else {

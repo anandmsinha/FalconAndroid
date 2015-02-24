@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -174,10 +175,10 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
             intent.putExtra("group", groupId);
             startActivity(intent);
           } else {
-            Toast.makeText(this, "You don't have create permission in this Ba.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.create_permission), Toast.LENGTH_LONG).show();
           }
         } else {
-          Toast.makeText(this, "Some internal error has occured.", Toast.LENGTH_LONG).show();
+          Toast.makeText(this, getResources().getString(R.string.internel_error), Toast.LENGTH_LONG).show();
         }
         return true;
       case R.id.saved_searches:
@@ -225,6 +226,10 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
     groupId = position;
     intent.putExtra("group", position);
     startActivity(intent);
+  }
+
+  public String s(int resId) {
+    return getResources().getString(resId);
   }
 
   public abstract long getBaId();

@@ -61,7 +61,8 @@ public class AdvancedViewRequestActivity extends BaseDrawerActivity implements P
     Log.d(TAG, "fillDetails called");
     baId = intentBundle.getLong("baId");
     actionId = intentBundle.getLong("actionId");
-    final ProgressDialog showLoading = UiBuilder.createProgressDialog(this, "Loading", "Fetching action");
+    final ProgressDialog showLoading = UiBuilder.createProgressDialog(
+        this, getResources().getString(R.string.loading), getResources().getString(R.string.fetching_action));
     showLoading.show();
     CommonRequestsUtility.fetchActionModel(this, authToken, baId, actionId, new GetActionModel() {
       @Override
@@ -78,11 +79,11 @@ public class AdvancedViewRequestActivity extends BaseDrawerActivity implements P
 
       @Override
       public void onActionModelFetchError(boolean networkError) {
-        showLoading.setTitle("Error fetching action");
+        showLoading.setTitle(getResources().getString(R.string.fetch_error));
         if (networkError) {
-          showLoading.setMessage("Network error.");
+          showLoading.setMessage(getResources().getString(R.string.network_error));
         } else {
-          showLoading.setMessage("You do not have permission to view this action.");
+          showLoading.setMessage(getResources().getString(R.string.permission_view));
         }
       }
     });

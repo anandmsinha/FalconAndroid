@@ -95,7 +95,7 @@ public class LoginActivity extends Activity {
               Log.e(TAG, "Some exception occured - " + e.toString());
             }
             Log.e(TAG, "Authentication failed");
-            Toast.makeText(LoginActivity.this, "Authentication failed - ", Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, "Authentication failed", Toast.LENGTH_LONG).show();
           }
         });
   }

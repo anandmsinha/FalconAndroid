@@ -10,50 +10,28 @@ import com.example.anand.falconproduction.activity.LoginActivity;
 import com.example.anand.falconproduction.activity.MainActivity;
 import com.example.anand.falconproduction.utility.ApplicationConstants;
 
-
+/*
+ * This activity is default activity from launcher after coming to this activity
+ * next activity is decided from here based upon auth-token and client token.
+ */
 public class ActivityDecider extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
     SharedPreferences sharedPreferences =
         getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
-    Intent mainIntenet;
     if (sharedPreferences.contains(ApplicationConstants.clientToken)) {
       String token = sharedPreferences.getString(ApplicationConstants.clientToken, "token");
-      String url;
-      switch (token) {
-        case "anand":
-          url = "http://192.168.0.05:8080/falcon-dms/rest/api/";
-          ApplicationConstants.setClientId(1L);
-          break;
-        case "6081test":
-          url = "https://mytbits.com:6081/falcon-dms/rest/api/";
-          ApplicationConstants.setClientId(1L);
-          break;
-        case "3081test":
-          url = "https://mytbits.com:3081/falcon-dms/rest/api/";
-          ApplicationConstants.setClientId(1L);
-          break;
-        case "JSPLtest":
-          url = "https://e-hub.in/falcon-dms/rest/api/";
-          ApplicationConstants.setClientId(1L);
-          break;
-        case "JPLtest":
-          url = "https://dms.jindalpower.com/falcon-dms/rest/api/";
-          ApplicationConstants.setClientId(1L);
-          break;
-        case "UATtest":
-          url = "http://10.36.1.62/falcon-dms/rest/api/";
-          ApplicationConstants.setClientId(1L);
-          break;
-        default:
-          url = "";
-      }
-
-      if (!url.equals("")) {
-        ApplicationConstants.setBaseAppUrl(url);
-
+      if (ApplicationConstants.clientTokes.containsKey(token)) {
+        Intent mainIntenet;
+        ApplicationConstants.setClientId(1L);
+        ApplicationConstants.setBaseAppUrl(ApplicationConstants.clientTokes.get(token));
         if (sharedPreferences.contains(ApplicationConstants.appAuthToken)) {
           mainIntenet = new Intent(this, MainActivity.class);
         } else {

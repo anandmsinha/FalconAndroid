@@ -22,13 +22,14 @@ import com.koushikdutta.ion.Ion;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by anand on 3/2/15.
  * <p/>
- * Class acts as helper for form submission.
+ * Class is helper for form submission.
  */
 public class FormSubmissionUtility {
 
@@ -60,7 +61,7 @@ public class FormSubmissionUtility {
    * Right now we are using asynctask later on we need to find better solution
    * to this as file upload and process can be really long. Using Async Task here
    * is not totally incorrect as The main problem with long running process in AsyncTask
-   * is memory leak due t change of activty but we are blocking our activity son chances
+   * is memory leak due to change of activty but we are blocking our activity so chances
    * of memory leak should not be there.
    */
   class SubmitRequestForm extends AsyncTask<RequestForm, String, Boolean> {
@@ -127,10 +128,19 @@ public class FormSubmissionUtility {
             View formComponent = fieldAdvanced.getFormComponent();
             if (fieldAdvanced.isFieldHasOptions()) {
               if (formComponent instanceof Spinner) {
-                String key = ((Spinner) formComponent).getSelectedItem().toString();
+                String key = "";
+                Object tmpObject = ((Spinner) formComponent).getSelectedItem();
+                if (tmpObject != null) {
+                  key = tmpObject.toString();
+                }
                 String value = fieldAdvanced.getFieldOptionsMap().get(key);
                 if (value != null) {
                   fieldAdvanced.setFieldValue(value);
+                } else {
+                  // We have to set default value in case nothing has been selected.
+                  if (!fieldAdvanced.getFieldOptions().isEmpty()) {
+                    fieldAdvanced.setFieldValue(fieldAdvanced.getFieldOptions().get(0).getName());
+                  }
                 }
               }
             } else if (actualType.equals("BooleanData")) {

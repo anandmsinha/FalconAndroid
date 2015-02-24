@@ -44,4 +44,16 @@
     <string name="saved_Searches">Saved searches</string>
     <string name="error_saved_search">Error in loading saved searches.</string>
 
+    <string name="invalid_token">Invalid token</string>
+    <string name="network_error">Network Error</string>
+    <string name="loading">Loading</string>
+    <string name="fetching_action">Fetching Action</string>
+
+    <string name="create_permission">You don\'t have create permission in this Ba.</string>
+    <string name="internel_error">Some internal error has occured.</string>
+    <string name="failed_load_form">Failed to load form try again</string>
+    <string name="submission_progress">Submission in progress</string>
+    <string name="preparing_form">Preparing form</string>
+    <string name="error_upd_form">Error in fetching update action form</string>
+
 </resources>
