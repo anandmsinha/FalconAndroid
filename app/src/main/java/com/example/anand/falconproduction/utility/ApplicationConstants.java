@@ -28,7 +28,7 @@ public class ApplicationConstants {
   public static long clientId = 1L;
 
   public static final Map<String, String> clientTokes = new HashMap<String, String>() {{
-    put("anand", "http://192.168.0.11:8080/falcon-dms/rest/api/");
+    put("anand", "http://192.168.0.05:8080/falcon-dms/rest/api/");
     put("6081test", "https://mytbits.com:6081/falcon-dms/rest/api/");
     put("3081test", "https://mytbits.com:3081/falcon-dms/rest/api/");
     put("JSPLtest", "https://e-hub.in/falcon-dms/rest/api/");
