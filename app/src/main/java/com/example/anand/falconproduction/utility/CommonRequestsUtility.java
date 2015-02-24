@@ -100,7 +100,7 @@ public class CommonRequestsUtility {
         });
   }
 
-  private static void setBaGroups(List<BaGroups> baGroupes) {
+  public static void setBaGroups(List<BaGroups> baGroupes) {
     baGroups = baGroupes;
   }
 

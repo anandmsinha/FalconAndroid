@@ -190,6 +190,7 @@ public abstract class BaseDrawerActivity extends ActionBarActivity implements Ge
       case R.id.action_logout:
         SharedPreferences sharedPreferences = getSharedPreferences(ApplicationConstants.appSharedPreference, MODE_PRIVATE);
         SharedPreferences.Editor mainEditor = sharedPreferences.edit();
+        CommonRequestsUtility.setBaGroups(null);
         mainEditor.clear();
         mainEditor.apply();
         super.startActivity(new Intent(this, ActivityDecider.class));
