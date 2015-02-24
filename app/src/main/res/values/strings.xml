@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Falconproduction</string>
+    <string name="app_name">tBits</string>
     <string name="search_hint">Search</string>
     <string name="title_activity_activity_decider">ActivityDecider</string>
     <string name="hello_world">Hello world!</string>
