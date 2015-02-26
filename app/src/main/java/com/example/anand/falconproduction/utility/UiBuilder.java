@@ -87,7 +87,7 @@ public class UiBuilder {
 
   public static CheckBox createCheckbox(Activity activity) {
     CheckBox checkBox = new CheckBox(activity);
-    checkBox.setChecked(true);
+    checkBox.setChecked(false);
     return checkBox;
   }
 

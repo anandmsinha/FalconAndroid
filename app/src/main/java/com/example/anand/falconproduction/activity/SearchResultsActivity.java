@@ -30,6 +30,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by anand on 15/12/14.
@@ -77,7 +78,7 @@ public class SearchResultsActivity extends Activity {
   private void handleIntent(Intent intent) {
     Log.d(TAG, "handleIntent called");
     Log.d(TAG, intent.getExtras().toString());
-    query = intent.getStringExtra(SearchManager.QUERY);
+    query = intent.getStringExtra(SearchManager.QUERY).trim();
     baId = intent.getLongExtra("baId", 0);
     group = intent.getIntExtra("group", 0);
     searchResultsAdapter = new ArrayAdapter<JsonObject>(this, 0) {
@@ -145,6 +146,7 @@ public class SearchResultsActivity extends Activity {
     }
     loading = Ion.with(this)
         .load(url)
+        .setTimeout(60*60*100)
         .setHeader("auth-token", token)
         .asJsonObject()
         .setCallback(new FutureCallback<JsonObject>() {
@@ -153,7 +155,9 @@ public class SearchResultsActivity extends Activity {
             Log.d(TAG, "search completed - first fetch status " + firstFetch);
             if (e != null) {
               Log.d(TAG, "some error has occured " + e.getMessage());
-              if (!firstFetch) {
+              if (e instanceof TimeoutException) {
+                showResultsMessage("Server is taking too long to respond");
+              } else if(!firstFetch) {
                 showResultsMessage("Some error has occured");
               }
               Toast.makeText(SearchResultsActivity.this, "Some error has occured", Toast.LENGTH_SHORT).show();
