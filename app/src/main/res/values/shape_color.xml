@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="color_list">
+        <item>RED</item>
+        <item>BLUE</item>
+        <item>GREEN</item>
+        <item>BLACK</item>
+    </string-array>
+    <string-array name="shape_list">
+        <item>Circle</item>
+        <item>Line</item>
+        <item>Rectangle</item>
+        <item>Arc</item>
+        <item>Text</item>
+    </string-array>
+</resources>

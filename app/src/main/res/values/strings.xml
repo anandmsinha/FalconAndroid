@@ -55,5 +55,7 @@
     <string name="submission_progress">Submission in progress</string>
     <string name="preparing_form">Preparing form</string>
     <string name="error_upd_form">Error in fetching update action form</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_edit_image">EditImageActivity</string>
 
 </resources>

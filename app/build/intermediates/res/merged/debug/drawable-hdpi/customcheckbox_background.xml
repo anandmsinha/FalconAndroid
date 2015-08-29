@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/btn_check_label_background" />
+</selector><!-- From: file:/Users/abhisar/work_android/falcon/FalconAndroid/app/src/main/res/drawable-hdpi/customcheckbox_background.xml -->
