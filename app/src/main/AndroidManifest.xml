@@ -1,67 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="com.example.anand.falconproduction"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.anand.falconproduction" >
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18"/>
+        android:maxSdkVersion="18" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18"/>
-
+        android:maxSdkVersion="18" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.AppCompat.Light">
+        android:theme="@style/Theme.AppCompat.Light" >
         <activity
-            android:name="com.example.anand.falconproduction.ActivityDecider"
-            android:noHistory="true">
+            android:name=".ActivityDecider"
+            android:noHistory="true" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.anand.falconproduction.activity.LoginActivity"
-            android:noHistory="true">
+            android:name=".activity.LoginActivity"
+            android:noHistory="true" >
         </activity>
         <activity
             android:name=".activity.ClientDeciderActivity"
-            android:noHistory="true">
+            android:noHistory="true" >
         </activity>
-        <activity
-            android:name="com.example.anand.falconproduction.activity.MainActivity">
+        <activity android:name=".activity.MainActivity" >
         </activity>
-        <activity android:name=".activity.CreateRequestActivity">
+        <activity android:name=".activity.CreateRequestActivity" >
         </activity>
-        <activity android:name=".activity.utility.MultipleFilesSelectionActivity">
+        <activity android:name=".activity.utility.MultipleFilesSelectionActivity" >
         </activity>
-        <activity android:name=".activity.EditActionActivity">
+        <activity android:name=".activity.EditActionActivity" >
         </activity>
-        <activity android:name=".activity.AdvancedViewRequestActivity">
+        <activity android:name=".activity.AdvancedViewRequestActivity" >
         </activity>
-        <activity android:name=".activity.SavedSearchActivity">
+        <activity android:name=".activity.SavedSearchActivity" >
         </activity>
         <activity
             android:name=".activity.SearchResultsActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop" >
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+                android:resource="@xml/searchable" />
         </activity>
 
         <meta-data
             android:name="android.app.default_searchable"
-            android:value=".activity.SearchResultsActivity"/>
+            android:value=".activity.SearchResultsActivity" />
+
+        <activity
+            android:name=".activity.CameraActivity"
+            android:label="@string/title_activity_camera" >
+        </activity>
+        <activity
+            android:name=".activity.EditImageActivity"
+            android:label="@string/title_activity_edit_image" >
+        </activity>
     </application>
 
 </manifest>

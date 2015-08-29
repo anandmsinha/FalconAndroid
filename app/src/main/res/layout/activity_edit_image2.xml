@@ -1,0 +1,69 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                tools:context="com.example.anand.falconproduction.activity.EditImageActivity">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp">
+        <EditText
+            android:id="@+id/et_txt"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/btn_clr_all"
+            android:text="TEXT"
+            android:textSize="14sp" />
+        <Button
+            android:id="@+id/btn_save_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/btn_clr_all"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="Save"
+            android:textSize="14sp" />
+        <Spinner
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_shape"
+            android:entries="@array/shape_list"/>
+        <Spinner
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_color"
+            android:entries="@array/color_list"/>
+        <Button
+            android:id="@+id/btn_clr_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/et_txt"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="Clear"
+            android:textSize="14sp" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="51dp">
+        <ImageView
+            android:id="@+id/iv_ttx"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/et_txt"
+            />   </LinearLayout>
+
+</RelativeLayout>
